@@ -73,13 +73,12 @@ button:focus-visible {
 }
 
 .app-header__logo {
-  display: grid;
-  place-items: center;
-  width: 44px;
   height: 44px;
+  width: auto;
   border-radius: 12px;
-  background: #1d4ed8;
-  font-weight: 700;
+  object-fit: contain;
+  background: rgba(15, 23, 42, 0.1);
+  padding: 0.35rem 0.45rem;
 }
 
 .app-header__title {

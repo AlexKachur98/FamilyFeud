@@ -12,7 +12,7 @@ export default function Layout() {
     <div className="app-shell">
       <header className="app-header">
         <div className="app-header__brand">
-          <span className="app-header__logo" aria-hidden>FF</span>
+          <img src="/Family_Feud_Logo.png" alt="Family Feud" className="app-header__logo" />
           <div>
             <h1 className="app-header__title">Family Feud Control Center</h1>
             <p className="app-header__subtitle">Coordinate surveys, sessions, and live gameplay.</p>
