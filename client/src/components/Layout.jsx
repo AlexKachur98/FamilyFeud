@@ -5,8 +5,8 @@
  * @purpose Provides shared chrome for host dashboard views including header navigation.
  */
 import { useState } from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { NAV_ITEMS, AUTH_NAV_ITEMS } from '../utils/navigation.js';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { NAV_ITEMS, AUTH_NAV_ITEMS, HOME_NAV_ITEM } from '../utils/navigation.js';
 import { signOut } from '../utils/authClient.js';
 
 export default function Layout() {
@@ -31,7 +31,9 @@ export default function Layout() {
       {isLanding ? null : (
       <header className="app-header">
         <div className="app-header__brand">
-          <img src="/Family_Feud_Logo.png" alt="Family Feud" className="app-header__logo" />
+          <Link to="/" className="app-header__brand-link" aria-label="Go to Home">
+            <img src="/Family_Feud_Logo.png" alt="Family Feud" className="app-header__logo" />
+          </Link>
           <div>
             <h1 className="app-header__title">Family Feud Control Center</h1>
             <p className="app-header__subtitle">Coordinate surveys, sessions, and live gameplay.</p>
@@ -40,7 +42,7 @@ export default function Layout() {
 
         <nav className="app-nav">
           <ul className="app-nav__list">
-            {NAV_ITEMS.map((item) => (
+            {[HOME_NAV_ITEM, ...NAV_ITEMS].map((item) => (
               <li key={item.path}>
                 <NavLink to={item.path} className="app-nav__link">
                   {item.label}
