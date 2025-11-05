@@ -40,8 +40,11 @@ Family Feud is a web-based implementation of the classic survey-style game show.
 - Consider adding authentication and persistent storage for extended multiplayer sessions.
 
 ### Current Sprint Snapshot (2025-11-04)
-- Front-end skeleton established with dashboard, question management, session control, player join, and auth stubs.
+- Front-end skeleton established with a basic Home landing (logo + Sign In/Play), dashboard, question management, session control, player join, and auth stubs.
 - Placeholder data lives in `client/src/utils/questionSets.js` and `client/src/utils/gameSessions.js` until APIs land.
 - Documentation added under `docs/` covering gameplay research, backend handoff expectations, and build log.
 - Authentication forms now hit live endpoints; placeholder sanitisation in place until backend trims response fields.
 - Styling remains basic; design system pass deferred to next milestone.
+
+### Dev Proxy
+- Vite development server proxies `/api/*` and `/auth/*` to the Express backend on `http://localhost:3000` so sign‑in/sign‑up work locally with cookies.

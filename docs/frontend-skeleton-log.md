@@ -7,6 +7,7 @@
 4. **17:49** — Scaffolded dashboard, question management, session controls, player join, and auth pages with base CSS.
 5. **18:14** — Documented backend integration expectations and refreshed project README files.
 6. **18:32** — Wired sign-in/sign-up forms to live APIs with response sanitisation and status messaging.
+7. **24:15** — Added a basic Home landing (logo, Sign In, Play) with slide‑out menu and hid the global header on `/`.
 
 ## Verification Steps
 - Run `npm install` at repo root to ensure workspace deps restore.

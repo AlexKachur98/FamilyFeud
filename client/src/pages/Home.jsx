@@ -48,6 +48,7 @@ export default function Home() {
       </main>
 
       {/* Simple slide-out drawer for quick navigation while on the landing view. */}
+      {/* TODO (Frontend): read links from PRIMARY_NAV_LINKS to avoid duplicating routes here. */}
       {menuOpen ? <button className="landing-basic__backdrop" aria-label="Close menu" onClick={closeMenu} /> : null}
       <nav
         id="landing-drawer"

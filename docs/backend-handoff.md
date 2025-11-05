@@ -18,6 +18,10 @@ The front-end skeleton now exposes host dashboards, question set management, ses
 | Auth sign-out | `/auth/signout` | GET | Clears cookie. |
 | Auth sign-up | `/auth/signup` | POST | Optionally queue approvals; respond with pending status. |
 
+## Dev Integration Notes
+- The front-end dev server proxies both `/api/*` and `/auth/*` to the Express backend on `http://localhost:3000`. Keep CORS permissive in development.
+- Please set cookies with `HttpOnly`, `SameSite=Lax` (or `Strict` where possible), and `Secure` in production (HTTPS). The client already sends `credentials: 'include'`.
+
 ## Real-Time Transport
 - WebSocket namespace suggestion: `/ws/sessions/:id` broadcasting strikes, revealed answers, points, buzzer lockouts.
 - Player buzzer: emit `playerBuzz` events containing session ID, player ID, timestamp; host receives queue for arbitration.
