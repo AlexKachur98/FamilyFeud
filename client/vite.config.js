@@ -17,10 +17,19 @@ export default defineConfig(({ command }) => {
     },
     server: {
       proxy: {
-        '/api': environment === "development"
-          ? `http://localhost:3000`
-          : 'https://familyfeud-server.onrender.com'
-      }
+        '/api': {
+          target: environment === 'development'
+            ? 'http://localhost:3000'
+            : 'https://familyfeud-server.onrender.com',
+          changeOrigin: true,
+        },
+        '/auth': {
+          target: environment === 'development'
+            ? 'http://localhost:3000'
+            : 'https://familyfeud-server.onrender.com',
+          changeOrigin: true,
+        },
+      },
     }
   }
 })

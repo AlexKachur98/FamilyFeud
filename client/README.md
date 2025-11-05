@@ -1,16 +1,61 @@
-# React + Vite
+# Family Feud – Front-End Skeleton
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
+React + Vite SPA that powers the host dashboard, question management, session control, and contestant join experiences for the Family Feud project. Styling is intentionally minimal; focus is on layout structure, data requirements, and integration touch points for the upcoming backend release.
 
-Currently, two official plugins are available:
+## Tech Stack
+- React 19 with Vite 7
+- React Router 7 for nested routing
+- Plain CSS modules (`styles/index.css`) for baseline layout primitives
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Available Scripts
+```bash
+npm install       # from repository root to install all workspaces
+npm run dev       # runs client (Vite) and server (Express) concurrently
+npm run dev --prefix client  # front-end only
+```
 
-## React Compiler
+## Project Structure
+```
+client/
+  src/
+    components/      # Shared UI primitives (Layout, PageSection)
+    pages/           # Route-aligned views (dashboard, sessions, auth, etc.)
+    utils/           # Placeholder data scaffolding for question sets & sessions
+    styles/          # Baseline, un-themed CSS tokens
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Current Status
+- Host dashboard surfaces placeholder metrics via `questionSets.js` and `gameSessions.js`.
+- Question set CRUD form and list are static shells with inline `TODO (Backend Team)` annotations.
+- Sessions view outlines live controls and utility actions awaiting API hooks.
+- Player join screen delivers access code form plus buzzer button ready for WebSocket wiring.
+- Auth views now call `/api/users/` and `/auth/signin`, sanitising responses until backend removes sensitive fields.
+- Basic full-screen Home landing is live on `/` (dark blue stage color, centered logo, Sign In and Play buttons). A simple slide‑out menu (hamburger top‑left) provides quick links while the global header is hidden on the landing screen.
+ - Placeholder routes are available:
+   - `/under-construction` for unfinished flows and buttons
+   - `/signed-out` confirmation after sign‑out
+   - `*` → 404 Not Found page
 
-## Expanding the ESLint configuration
+### Dev Proxy
+- Vite dev server proxies API calls to the backend:
+  - `/api/*` → http://localhost:3000 (development)
+  - `/auth/*` → http://localhost:3000 (development)
+  - Set `credentials: 'include'` when calling auth routes so the cookie is stored.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Next Steps
+1. Replace placeholder data with fetch hooks once REST endpoints are available.
+2. Introduce global state management (React Query or Redux) as soon as live data is consumed.
+3. Layer in real-time communication (Socket.IO or native WebSocket) for buzzer + host controls.
+4. Apply design system styling and responsive refinements after functionality stabilizes.
+5. Replace the temporary landing drawer with a shared, auth‑aware global nav and surface role‑based routes after sign‑in.
+6. Replace placeholder routes (UnderConstruction/SignedOut) with final implementations as endpoints and flows land.
+
+## Branch & PR Workflow
+- Use feature branches per change (e.g., `feature/front-end-skeleton`).
+- Push the branch and open a PR against `main`. Small follow‑up commits auto‑update the PR.
+
+## Documentation
+- `docs/family-feud-research.md` – gameplay + UX research summary.
+- `docs/backend-handoff.md` – endpoint expectations and integration notes for backend teammates.
+- `docs/frontend-skeleton-log.md` – build timeline, verification steps, next actions.
