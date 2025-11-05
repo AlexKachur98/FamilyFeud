@@ -8,6 +8,8 @@
 5. **18:14** — Documented backend integration expectations and refreshed project README files.
 6. **18:32** — Wired sign-in/sign-up forms to live APIs with response sanitisation and status messaging.
 7. **24:15** — Added a basic Home landing (logo, Sign In, Play) with slide‑out menu and hid the global header on `/`.
+8. **24:35** — Introduced NotFound, UnderConstruction, and SignedOut pages; routed unfinished actions consistently.
+9. **24:45** — Final cleanup: aligned nav button styling, linked logo/home, updated READMEs and handoff notes.
 
 ## Verification Steps
 - Run `npm install` at repo root to ensure workspace deps restore.

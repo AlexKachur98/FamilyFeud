@@ -32,6 +32,10 @@ client/
 - Player join screen delivers access code form plus buzzer button ready for WebSocket wiring.
 - Auth views now call `/api/users/` and `/auth/signin`, sanitising responses until backend removes sensitive fields.
 - Basic full-screen Home landing is live on `/` (dark blue stage color, centered logo, Sign In and Play buttons). A simple slide‑out menu (hamburger top‑left) provides quick links while the global header is hidden on the landing screen.
+ - Placeholder routes are available:
+   - `/under-construction` for unfinished flows and buttons
+   - `/signed-out` confirmation after sign‑out
+   - `*` → 404 Not Found page
 
 ### Dev Proxy
 - Vite dev server proxies API calls to the backend:
@@ -45,6 +49,11 @@ client/
 3. Layer in real-time communication (Socket.IO or native WebSocket) for buzzer + host controls.
 4. Apply design system styling and responsive refinements after functionality stabilizes.
 5. Replace the temporary landing drawer with a shared, auth‑aware global nav and surface role‑based routes after sign‑in.
+6. Replace placeholder routes (UnderConstruction/SignedOut) with final implementations as endpoints and flows land.
+
+## Branch & PR Workflow
+- Use feature branches per change (e.g., `feature/front-end-skeleton`).
+- Push the branch and open a PR against `main`. Small follow‑up commits auto‑update the PR.
 
 ## Documentation
 - `docs/family-feud-research.md` – gameplay + UX research summary.

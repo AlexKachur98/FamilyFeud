@@ -45,6 +45,7 @@ export default function Home() {
             Play
           </Link>
         </div>
+        {/* TODO (Frontend): route Play to an active lobby or new-session wizard when sessions API lands. */}
       </main>
 
       {/* Simple slide-out drawer for quick navigation while on the landing view. */}

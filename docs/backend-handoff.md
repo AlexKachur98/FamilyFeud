@@ -17,10 +17,13 @@ The front-end skeleton now exposes host dashboards, question set management, ses
 | Auth sign-in | `/auth/signin` | POST | Current middleware expects JWT cookie `t`. Consider setting HttpOnly + SameSite. |
 | Auth sign-out | `/auth/signout` | GET | Clears cookie. |
 | Auth sign-up | `/auth/signup` | POST | Optionally queue approvals; respond with pending status. |
+| Forgot password | `/auth/forgot-password` | POST | Initiates password reset email/token. |
+| Reset password | `/auth/reset-password` | POST | Confirms token + sets new password (bcrypt/argon). |
 
 ## Dev Integration Notes
 - The front-end dev server proxies both `/api/*` and `/auth/*` to the Express backend on `http://localhost:3000`. Keep CORS permissive in development.
 - Please set cookies with `HttpOnly`, `SameSite=Lax` (or `Strict` where possible), and `Secure` in production (HTTPS). The client already sends `credentials: 'include'`.
+- Consider including lightweight `role` metadata in auth responses so the SPA can route hosts/producers.
 
 ## Real-Time Transport
 - WebSocket namespace suggestion: `/ws/sessions/:id` broadcasting strikes, revealed answers, points, buzzer lockouts.

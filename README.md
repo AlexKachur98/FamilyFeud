@@ -48,3 +48,8 @@ Family Feud is a web-based implementation of the classic survey-style game show.
 
 ### Dev Proxy
 - Vite development server proxies `/api/*` and `/auth/*` to the Express backend on `http://localhost:3000` so sign‑in/sign‑up work locally with cookies.
+
+### Placeholder Routes
+- `/under-construction` indicates incomplete flows/actions.
+- `/signed-out` confirms sign‑out.
+- Unknown routes render a friendly 404 page.
