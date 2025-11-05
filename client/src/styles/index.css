@@ -111,10 +111,14 @@ button:focus-visible {
 }
 
 .app-nav__link {
-  padding: 0.4rem 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 0.9rem;
   border-radius: 999px;
   font-weight: 600;
   color: inherit;
+  border: 1px solid transparent; /* keep height consistent with button variant */
 }
 
 .app-nav__link.active {
@@ -122,9 +126,13 @@ button:focus-visible {
 }
 
 .app-nav__link--button {
+  appearance: none;
+  -webkit-appearance: none;
   background: none;
   border: 1px solid rgba(226, 232, 240, 0.35);
   cursor: pointer;
+  height: 36px; /* match link height */
+  line-height: 1;
 }
 
 .app-main {
