@@ -52,10 +52,10 @@ export default function Sessions() {
                 </div>
               </dl>
               <div className="session-card__actions">
-                <button type="button">Reveal Next Answer</button>
-                <button type="button">Add Strike</button>
-                <button type="button">Award Points</button>
-                <button type="button">End Round</button>
+                <button type="button" onClick={() => navigate('/under-construction')}>Reveal Next Answer</button>
+                <button type="button" onClick={() => navigate('/under-construction')}>Add Strike</button>
+                <button type="button" onClick={() => navigate('/under-construction')}>Award Points</button>
+                <button type="button" onClick={() => navigate('/under-construction')}>End Round</button>
               </div>
               {/* TODO (Backend Team): subscribe to WebSocket session channel for live updates. */}
             </article>

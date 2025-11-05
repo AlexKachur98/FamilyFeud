@@ -45,7 +45,7 @@ export default function Dashboard() {
       <PageSection
         title="Active Sessions"
         description="Monitor lobbies and live games."
-        actions={<button type="button">Create Session</button>}
+        actions={<button type="button" onClick={() => navigate('/under-construction')}>Create Session</button>}
       >
         <div className="table-placeholder">
           <div className="table-placeholder__row table-placeholder__row--head">

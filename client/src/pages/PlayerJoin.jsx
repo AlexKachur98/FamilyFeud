@@ -4,9 +4,11 @@
  * @since 2025-11-04
  * @purpose Join surface for contestants entering a Family Feud session.
  */
+import { useNavigate } from 'react-router-dom';
 import PageSection from '../components/PageSection.jsx';
 
 export default function PlayerJoin() {
+  const navigate = useNavigate();
   return (
     <div className="page page--centered">
       <header className="page__header">
@@ -16,7 +18,13 @@ export default function PlayerJoin() {
       </header>
 
       <PageSection title="Access Code" description="Codes refresh for every new lobby to prevent random joins.">
-        <form className="form-stack">
+        <form
+          className="form-stack"
+          onSubmit={(e) => {
+            e.preventDefault();
+            navigate('/under-construction');
+          }}
+        >
           <label htmlFor="join-access-code">
             Access Code
             <input
@@ -42,7 +50,7 @@ export default function PlayerJoin() {
       </PageSection>
 
       <PageSection title="Buzzer" description="Triggers once the host opens the question faceoff.">
-        <button type="button" className="buzzer">Buzz</button>
+        <button type="button" className="buzzer" onClick={() => navigate('/under-construction')}>Buzz</button>
         {/* TODO (Backend Team): open WebSocket channel for near-real-time buzzer latency handling. */}
       </PageSection>
     </div>

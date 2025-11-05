@@ -4,10 +4,12 @@
  * @since 2025-11-04
  * @purpose Manage question sets for Family Feud rounds.
  */
+import { useNavigate } from 'react-router-dom';
 import PageSection from '../components/PageSection.jsx';
 import { getQuestionSets } from '../utils/questionSets.js';
 
 export default function QuestionSets() {
+  const navigate = useNavigate();
   const questionSets = getQuestionSets();
 
   return (
@@ -22,7 +24,13 @@ export default function QuestionSets() {
         title="Create Question Set"
         description="Add a new survey prompt, answers, and optional tags."
       >
-        <form className="form-grid form-grid--vertical">
+        <form
+          className="form-grid form-grid--vertical"
+          onSubmit={(e) => {
+            e.preventDefault();
+            navigate('/under-construction');
+          }}
+        >
           <label>
             Title
             <input type="text" placeholder="Family Dinner Staples" />
@@ -59,7 +67,7 @@ export default function QuestionSets() {
             ))}
           </div>
           <div className="form-actions">
-            <button type="button">Add Another Answer</button>
+            <button type="button" onClick={() => navigate('/under-construction')}>Add Another Answer</button>
             <button type="submit">Save Question Set</button>
           </div>
           {/* TODO (Backend Team): hook to POST /api/question-sets with validation + optimistic updates. */}
@@ -87,8 +95,8 @@ export default function QuestionSets() {
               <span>{set.answers.length}</span>
               <span>{new Date(set.updatedAt).toLocaleDateString()}</span>
               <span className="table-placeholder__actions">
-                <button type="button" className="link-button">Edit</button>
-                <button type="button" className="link-button link-button--destructive">Delete</button>
+                <button type="button" className="link-button" onClick={() => navigate('/under-construction')}>Edit</button>
+                <button type="button" className="link-button link-button--destructive" onClick={() => navigate('/under-construction')}>Delete</button>
               </span>
             </div>
           ))}

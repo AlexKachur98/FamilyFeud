@@ -5,6 +5,7 @@
  * @purpose Authentication screen for hosts to access moderator tools.
  */
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageSection from '../components/PageSection.jsx';
 import { signIn } from '../utils/authClient.js';
 
@@ -14,6 +15,7 @@ const INITIAL_FORM = {
 };
 
 export default function SignIn() {
+  const navigate = useNavigate();
   const [form, setForm] = useState(INITIAL_FORM);
   const [status, setStatus] = useState({ state: 'idle', message: '' });
 
@@ -79,7 +81,12 @@ export default function SignIn() {
             <button type="submit" disabled={isSubmitting}>
               {isSubmitting ? 'Signing In…' : 'Sign In'}
             </button>
-            <button type="button" className="link-button" disabled={isSubmitting}>
+            <button
+              type="button"
+              className="link-button"
+              disabled={isSubmitting}
+              onClick={() => navigate('/under-construction')}
+            >
               Forgot Password
             </button>
           </div>
