@@ -6,6 +6,7 @@
  */
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { PRIMARY_NAV_LINKS } from '../utils/navigation';
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -36,20 +37,27 @@ export default function Home() {
           alt="Family Feud Logo"
           className="landing-basic__logo-img"
         />
-
+        {/* Switched play button and sign-in button for better UX flow. Completed by Kelly Burden - Nov 2025 */}
         <div className="landing-basic__actions">
+          <Link to="/sessions" className="landing-basic__cta landing-basic__cta--primary">
+            Play
+          </Link>
           <Link to="/signin" className="landing-basic__cta landing-basic__cta--secondary">
             Sign In
           </Link>
-          <Link to="/player" className="landing-basic__cta landing-basic__cta--primary">
-            Play
-          </Link>
+
+          {/* Put new register link under sign-in for better UX flow. Completed by Kelly Burden - Nov 2025 */}
+         <Link to="/signup" className="landing-basic__register-link">
+         New User? Click here to register
+         </Link>
         </div>
-        {/* TODO (Frontend): route Play to an active lobby or new-session wizard when sessions API lands. */}
+        {/* TODO (Frontend): route Play to an active lobby or new-session wizard when sessions API lands. 
+        COMPLETED: Routed play button to /sessions (active sessions page). Completed by Kelly Burden - Nov 2025*/}
       </main>
 
       {/* Simple slide-out drawer for quick navigation while on the landing view. */}
-      {/* TODO (Frontend): read links from PRIMARY_NAV_LINKS to avoid duplicating routes here. */}
+      {/* TODO (Frontend): read links from PRIMARY_NAV_LINKS to avoid duplicating routes here. 
+      COMPLETED: Implemented dynamic navigation links from PRIMARY_NAV_LINKS. Completed by Kelly Burden - Nov 2025 */}
       {menuOpen ? <button className="landing-basic__backdrop" aria-label="Close menu" onClick={closeMenu} /> : null}
       <nav
         id="landing-drawer"
@@ -60,12 +68,13 @@ export default function Home() {
           ×
         </button>
         <ul className="landing-basic__drawer-list">
-          <li><Link to="/dashboard" onClick={closeMenu}>Dashboard</Link></li>
-          <li><Link to="/question-sets" onClick={closeMenu}>Question Sets</Link></li>
-          <li><Link to="/sessions" onClick={closeMenu}>Sessions</Link></li>
-          <li><Link to="/player" onClick={closeMenu}>Join Game</Link></li>
-          <li><Link to="/signin" onClick={closeMenu}>Sign In</Link></li>
-          <li><Link to="/signup" onClick={closeMenu}>Register</Link></li>
+          {PRIMARY_NAV_LINKS.map(link => (
+            <li key={link.path}>
+              <Link to={link.path} onClick={closeMenu}>
+                {link.label}
+              </Link>
+            </li>
+          ))}
         </ul>
       </nav>
     </div>
