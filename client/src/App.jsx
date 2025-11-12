@@ -10,6 +10,7 @@ import Home from './pages/Home.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import QuestionSets from './pages/QuestionSets.jsx';
 import Sessions from './pages/Sessions.jsx';
+import Leaderboard from './pages/Leaderboard.jsx';
 import PlayerJoin from './pages/PlayerJoin.jsx';
 import SignIn from './pages/SignIn.jsx';
 import SignUp from './pages/SignUp.jsx';
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="question-sets" element={<QuestionSets />} />
           <Route path="sessions" element={<Sessions />} />
+          <Route path="leaderboard" element={<Leaderboard />} />
           <Route path="player" element={<PlayerJoin />} />
           <Route path="signin" element={<SignIn />} />
           <Route path="signup" element={<SignUp />} />

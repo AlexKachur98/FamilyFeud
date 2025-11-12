@@ -1,0 +1,57 @@
+/* Scoped to leaderboard component */
+.leaderboard-page.page.page--centered {
+  background-image: url("../assets/FF-Leaderboard.png");
+  background-size: 100% 100%;
+  background-position: top;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+  min-width: 920px;
+  min-height: 820px;
+}
+
+.leaderboard-page .page__header {
+  text-align: center;
+  color: #fcbb2a;
+}
+
+.leaderboard-page .page__header h2 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.leaderboard-page .ranking-table {
+  width: 90%;
+  margin-top: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.leaderboard-page .ranking-table__row {
+  display: grid;
+  grid-template-columns: 2fr 1.8fr 1fr 0.6fr 0.6fr 1fr;
+  padding: 12px 15px;
+  border-bottom: 2px solid #f39332;
+}
+
+.leaderboard-page .ranking-table__row--head {
+  background-color: #0e153c;
+  font-weight: bold;
+  color: #f39332;
+}
+
+.leaderboard-page .ranking-table__row {
+  color: #fff;
+}
+
+.leaderboard-page .ranking-table__row:not(.ranking-table__row--head):hover {
+  background-color: rgba(243, 147, 50, 0.2);
+  cursor: pointer;
+}
+
+.leaderboard-page span {
+  text-align: center;
+  align-self: center;
+}

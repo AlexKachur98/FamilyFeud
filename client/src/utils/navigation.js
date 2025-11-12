@@ -34,6 +34,11 @@ export const NAV_ITEMS = [
     description: 'Preview the live board layout with placeholder slots.',
   },
   {
+    path: '/leaderboard',
+    label: 'Leaderboard',
+    description: 'View the rankings of all teams.',
+  },
+  {
     path: '/player',
     label: 'Player Join',
     description: 'Entry point for contestants to join matches using an access code.',
