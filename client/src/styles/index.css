@@ -700,17 +700,42 @@ button:focus-visible {
   width: 100%;
   aspect-ratio: 1800 / 360;
   border-radius: 24px;
-  border: 2px dashed rgba(255, 255, 255, 0.65);
-  background: rgba(15, 25, 72, 0.15);
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-board-question__text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2rem;
+  margin: 0;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 800;
+  text-align: center;
 }
 
 .game-board-timer {
   width: 200px;
   height: 110px;
   border-radius: 12px;
-  border: 2px dashed rgba(255, 255, 255, 0.65);
-  background: rgba(15, 25, 72, 0.15);
+  background-size: cover;
+  background-position: center;
+  display: grid;
+  place-items: center;
   margin-top: -5px;
+}
+
+.game-board-timer__value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0e153c;
 }
 .game-board-sides {
   position: absolute;
@@ -736,16 +761,26 @@ button:focus-visible {
   width: 120px;
   height: 120px;
   border-radius: 24px;
-  border: 2px dashed rgba(255, 255, 255, 0.65);
-  background: rgba(15, 25, 72, 0.15);
+  background-size: cover;
+  background-position: center;
+  border: 3px solid rgba(255, 255, 255, 0.8);
 }
 
 .game-board-player__score {
   width: 120px;
   height: 70px;
   border-radius: 12px;
-  border: 2px dashed rgba(255, 255, 255, 0.65);
-  background: rgba(15, 25, 72, 0.15);
+  background-size: cover;
+  background-position: center;
+  display: grid;
+  place-items: center;
+}
+
+.game-board-player__score span {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.2em;
 }
 
 .game-board-grid {
@@ -762,8 +797,32 @@ button:focus-visible {
   position: relative;
   aspect-ratio: 1512 / 339;
   border-radius: 18px;
-  border: 2px dashed rgba(255, 255, 255, 0.5);
-  background: rgba(15, 25, 72, 0.15);
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.45);
+}
+
+.game-board-grid__slot-text {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  color: #fff;
+}
+
+.game-board-grid__slot-rank {
+  font-size: 2rem;
+}
+
+.game-board-grid__slot-answer {
+  font-size: 1.1rem;
+  text-align: left;
 }
 
 .game-board-input {
@@ -772,6 +831,12 @@ button:focus-visible {
   border-radius: 18px;
   border: 2px dashed rgba(255, 255, 255, 0.65);
   background: rgba(15, 25, 72, 0.15);
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
 }
 
 @media (max-width: 900px) {
