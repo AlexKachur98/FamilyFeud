@@ -4,7 +4,7 @@
  * @since 2025-11-04
  * @purpose Hosts the Family Feud routing structure and shared layout.
  */
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout.jsx';
 import Home from './pages/Home.jsx';
 import Dashboard from './pages/Dashboard.jsx';
@@ -19,8 +19,9 @@ import SignedOut from './pages/SignedOut.jsx';
 import GameBoard from './pages/GameBoard.jsx';
 
 export default function App() {
+  // TODO: Swap Router alias back to BrowserRouter once the server serves index.html for deep links.
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
@@ -36,6 +37,6 @@ export default function App() {
         </Route>
         <Route path="/game-board" element={<GameBoard />} />
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
