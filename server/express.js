@@ -6,6 +6,7 @@ import cors from "cors";
 import helmet from "helmet";
 
 import userRoutes from './routes/user.route.js';
+import questionRoutes from './routes/question.route.js';
 import authRoutes from './routes/auth.route.js';
 import aiRoutes from './routes/ai.route.js';
 
@@ -21,6 +22,7 @@ app.use(cors());
 
 app.use('/', authRoutes);
 app.use('/', userRoutes);
+app.use('/', questionRoutes);
 app.use('/', aiRoutes);
 
 app.use((err, req, res, next) => {
