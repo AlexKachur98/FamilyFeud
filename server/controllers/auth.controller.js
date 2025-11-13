@@ -79,8 +79,8 @@ export default {
         { email, password } = req.body,
         user = await User.findOne({ "email": email });
 
-      if (!user) res.status(401).json({ error: "User not found" });
-      if (!user.comparePassword(password)) res.status(401).send({ error: "Passwords don't match." });
+      if (!user) return res.status(401).json({ error: "User not found" });
+      if (!user.comparePassword(password)) return res.status(401).send({ error: "Passwords don't match." });
 
       const token = generateToken(user);
       res.cookie('t', token, {
