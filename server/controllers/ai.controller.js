@@ -12,7 +12,7 @@ const getAiResponse = async (req, res) => {
         const questionAnswers = req.body.questionAnswers;
         const userAnswer = req.body.userAnswer;
 
-        if (!question || !questionAnswers || !userAnswer)  return res.status(400).json({ message: 'Question Answers and User Answer are required' });
+        if (!question || !questionAnswers || !userAnswer)  return res.status(400).json({ message: 'Question, Question Answers and User Answer are required' });
         
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
