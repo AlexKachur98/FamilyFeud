@@ -10,7 +10,7 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const res = await fetch('/api/auth/validate', {
+        const res = await fetch('/api/v1/auth/validate', {
           credentials: 'include'
         });
 
@@ -35,7 +35,7 @@ export default function AuthProvider({ children }) {
 
   const signIn = async (email, password) => {
     try {
-      const res = await fetch('/api/auth/signin', {
+      const res = await fetch('/api/v1/auth/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -61,7 +61,7 @@ export default function AuthProvider({ children }) {
 
   const signUp = async (name, email, password) => {
     try {
-      const res = await fetch('/api/auth/signup', {
+      const res = await fetch('/api/v1/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
@@ -86,7 +86,7 @@ export default function AuthProvider({ children }) {
 
   const signOut = async () => {
     try {
-      await fetch('/api/auth/signout', {
+      await fetch('/api/v1/auth/signout', {
         method: 'GET',
         credentials: 'include'
       });
