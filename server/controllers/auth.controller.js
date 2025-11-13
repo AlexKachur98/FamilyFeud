@@ -52,7 +52,7 @@ export default {
       });
 
       res.status(201).json({
-        message: "User registered successfuly",
+        message: "User registered successfully",
         user: {
           _id: user._id,
           username: user.username,
