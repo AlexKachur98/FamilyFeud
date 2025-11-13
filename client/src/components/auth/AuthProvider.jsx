@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { AuthContext } from './AuthContext';
 
+import { apiFetch } from '../../utils/api';
+
 export default function AuthProvider({ children }) {
   const
     [isLoggedIn, setIsLoggedIn] = useState(false),
@@ -10,9 +12,7 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const res = await fetch('/api/v1/auth/validate', {
-          credentials: 'include'
-        });
+        const res = await apiFetch('/api/v1/auth/validate');
 
         if (res.ok) {
           const data = await res.json();
@@ -35,11 +35,10 @@ export default function AuthProvider({ children }) {
 
   const signIn = async (email, password) => {
     try {
-      const res = await fetch('/api/v1/auth/signin', {
+      const res = await apiFetch('/api/v1/auth/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-        credentials: 'include'
+        body: JSON.stringify({ email, password })
       });
 
       if (!res.ok) {
@@ -61,11 +60,10 @@ export default function AuthProvider({ children }) {
 
   const signUp = async (name, email, password) => {
     try {
-      const res = await fetch('/api/v1/auth/signup', {
+      const res = await apiFetch('/api/v1/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
-        credentials: 'include'
+        body: JSON.stringify({ name, email, password })
       });
 
       if (!res.ok) {
@@ -86,9 +84,8 @@ export default function AuthProvider({ children }) {
 
   const signOut = async () => {
     try {
-      await fetch('/api/v1/auth/signout', {
-        method: 'GET',
-        credentials: 'include'
+      await apiFetch('/api/v1/auth/signout', {
+        method: 'GET'
       });
 
       setIsLoggedIn(false);
