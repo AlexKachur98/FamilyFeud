@@ -20,8 +20,10 @@ export default {
         catch (e) {
           if (e.errors) {
             // got an object instead of args
-            if (stagedUser = new User(Object.entries(e.errors)[0][1]['value']))
+            if (Object.entries(e.errors)[0][1]['value']) {
+              stagedUser = new User(Object.entries(e.errors)[0][1]['value'])
               return await saveUser(stagedUser);
+            };
           };
 
           if (e.errorResponse) {
@@ -77,8 +79,8 @@ export default {
         { email, password } = req.body,
         user = await User.findOne({ "email": email });
 
-      if (!user) res.status(401).json({ error: "User not found" });
-      if (!user.comparePassword(password)) res.status(401).send({ error: "Passwords don't match." });
+      if (!user) return res.status(401).json({ error: "User not found" });
+      if (!user.comparePassword(password)) return res.status(401).send({ error: "Passwords don't match." });
 
       const token = generateToken(user);
       res.cookie('t', token, {

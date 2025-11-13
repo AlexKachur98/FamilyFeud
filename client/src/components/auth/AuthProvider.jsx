@@ -43,7 +43,6 @@ export default function AuthProvider({ children }) {
       });
 
       if (!res.ok) {
-        console.log("RES: ", res);
         return { success: false, message: 'Login res failed' };
       }
 
