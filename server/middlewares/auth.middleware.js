@@ -1,33 +1,38 @@
-import jwt from 'jsonwebtoken'
 
-import config from '../config/config.js'
+import jwt from 'jsonwebtoken';
+
 
 const requireSignin = (req, res, next) => {
-    const token = req.cookies.t;
 
-    if (!token) return res.status(401).json({ error: "Unauthorized" });
+  let token;
+  const authheader = req.headers.authorization;
 
-    try {
-        jwt.verify(token, config.jwtSecret, (err, decoded) => {
-            if (err) return res.status(401).json({ error: "Unauthorized" });
+  if (authheader && authheader.startsWith('Bearer '))
+    token = authheader.split(" ")[1];
 
-            req.auth = decoded;
-            next();
-        });
-    } catch (err) {
-        return res.status(401).json({ error: "Unauthorized" });
-    }
+  else if (req.cookies.token)
+    token = req.cookies.token;
+
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  }
+  catch (_) {
+    return res.status(401).json({ error: "Unauthorized" });
+  };
 };
 
 const hasAuthorization = (req, res, next) => {
-    const authorized = req.params && req.auth && (
-        req.params.id == req.auth._id ||
-        req.auth.admin
-    );
+  const authorized = req.params && req.auth && (
+    req.params.id == req.auth._id ||
+    req.auth.admin
+  );
 
-    if (!authorized) return res.status(403).json({ error: "User is not authorized" });
-
-    next();
+  if (!authorized) return res.status(403).json({ error: "User is not authorized" });
+  next();
 };
 
-export default { requireSignin, hasAuthorization }
+export default { requireSignin, hasAuthorization };

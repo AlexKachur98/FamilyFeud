@@ -6,6 +6,8 @@
  */
 import { Link } from 'react-router-dom';
 
+// TODO: FrontEnd, Need a confirm to logout page with a button thats does the logout and then navigates to this page.
+
 export default function SignedOut() {
   return (
     <div className="page page--stacked">

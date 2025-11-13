@@ -28,4 +28,4 @@ app.listen(config.port, (err) => {
     : console.log(`Server running on https://dailygrind-server.onrender.com`);
 });
 
-export default app;
+// export default app;
