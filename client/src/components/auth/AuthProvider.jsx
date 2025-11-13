@@ -87,7 +87,7 @@ export default function AuthProvider({ children }) {
   const signOut = async () => {
     try {
       await fetch('/api/auth/signout', {
-        method: 'POST',
+        method: 'GET',
         credentials: 'include'
       });
 
