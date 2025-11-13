@@ -26,7 +26,6 @@ export default function SignIn() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setStatus({ state: 'loading', message: 'Checking credentials…' });
-console.log("FD: ", formData.email, formData.password)
     try {
       const { success, message } = await signIn(formData.email, formData.password);
       if (success) {
