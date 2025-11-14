@@ -10,8 +10,8 @@ const requireSignin = (req, res, next) => {
   if (authheader && authheader.startsWith('Bearer '))
     token = authheader.split(" ")[1];
 
-  else if (req.cookies.token)
-    token = req.cookies.token;
+  else if (req.cookies.t)
+    token = req.cookies.t;
 
   if (!token) return res.status(401).json({ error: "Unauthorized" });
 
