@@ -1,7 +1,7 @@
 
 import generateToken from '../utils/jwt.js'
 import User from '../models/user.model.js'
-
+import { handleUserSaveError } from '../helpers/dbErrorHandler.js'
 
 export default {
 
@@ -18,20 +18,13 @@ export default {
           user = await stagedUser.save();
         }
         catch (e) {
-          if (e.errors) {
-            // got an object instead of args
-            if (Object.entries(e.errors)[0][1]['value']) {
-              stagedUser = new User(Object.entries(e.errors)[0][1]['value'])
-              return await saveUser(stagedUser);
-            };
-          };
-
-          if (e.errorResponse) {
-            // unique item exists
-            if (e.errorResponse.code === 11000) {
-              const kv = Object.entries(e.errorResponse.keyValue)[0];
-              return res.status(400).json({ message: `${kv[0].toUpperCase()}: [ ${kv[1]} ] is already in use.` });
-            };
+          const value = await handleUserSaveError(e);
+          if (Array.isArray(value)) {
+            return res.status(400).json({ message: `${value[0].toUpperCase()}: [ ${value[1]} ] is already in use.` });
+          }
+          else if (value.name) {
+            stagedUser = new User(value)
+            return await saveUser(stagedUser);
           };
         };
         return user;

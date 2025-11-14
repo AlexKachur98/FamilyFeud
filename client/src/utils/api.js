@@ -13,10 +13,11 @@ export const apiFetch = async (endpoint, options = {}) => {
     }
   });
 
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`Fetch error: ${res.status} ${errorText}`);
-  };
+  // interferes with controllers.
+  // if (!res.ok) {
+  //   const errorText = await res.text();
+  //   throw new Error(`Fetch error: ${res.status} ${errorText}`);
+  // };
   return res;
 };
 
