@@ -31,7 +31,7 @@ export const NAV_ITEMS = [
   {
     path: "/profile",
     label: "Profile",
-    desciption: "View and update account details.",
+    description: "View and update account details.",
   },
   {
 
