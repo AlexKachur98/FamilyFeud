@@ -49,7 +49,7 @@ app
   })
 
   .get(/^(?!\/api).*/, rateLimit, (_, res) => {
-    res.sendFile(path.join(process.cwd(), 'client/dist', 'index.html'));
+    res.sendFile(path.join(process.cwd(), 'client/', 'index.html'));
   })
 
   .listen(config.port, (err) => {
