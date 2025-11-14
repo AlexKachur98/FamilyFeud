@@ -1,36 +1,30 @@
-const getErrorMessage = (err) => {
-    let message = '';
 
-    if (err.code) {
-        switch (err.code) {
-            case 11000:
-            case 11001:
-                message = getUniqueErrorMessage(err);
-                break;
-            default:
-                message = 'Something went wrong';    
-        }
-    } else {
-        for (let errName in err.errors) {
-            if (err.errors[errName].message) message = err.errors[errName].message;
-        }
-    }
-
-    return message;
+const eRespCodes = {
+  // unique item exists
+  11000: (err) => {
+    const kv = Object.entries(err.errorResponse.keyValue)[0];
+    return kv;
+  },
+  11001: (err) => {
+    console.log("ERROR 11001", err); // todo: db logging.
+  }
 };
 
-const getUniqueErrorMessage = (err) => {
-    let output;
-    try {
-        let fieldName =
-            err.message.substring(err.message.lastIndexOf('.$') + 2,
-            err.message.lastIndexOf('_1'));
-        output = fieldName.charAt(0).toUpperCase() + fieldName.slice(1) + ' already exists';
-    } catch (ex) {
-        output = 'Unique field already exists';
-    }
+const handleUserSaveError = async (err) => {
+  if (err.errors) {
+    // got an object instead of args
+    if (Object.entries(err.errors)[0][1]['value']) {
+      const value = Object.entries(err.errors)[0][1]['value'];
+      return value;
+    };
+  };
 
-    return output;
-}
+  if (err.errorResponse) {
+    if (err.errorResponse.code)
+      return eRespCodes[err.errorResponse.code]
+        ? eRespCodes[err.errorResponse.code](err)
+        : console.log("Unknown error response code during user save..", err.errorResponse.code);
+  };
+};
 
-export default { getErrorMessage };
+export { handleUserSaveError };

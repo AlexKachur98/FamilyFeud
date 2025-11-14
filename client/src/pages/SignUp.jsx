@@ -5,48 +5,63 @@
  * @purpose Registration screen for provisioning new host accounts.
  */
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageSection from '../components/PageSection.jsx';
-import { registerUser } from '../utils/authClient.js';
+import { useAuth } from '../components/auth/AuthContext.js';
 
 const INITIAL_FORM = {
   name: '',
   email: '',
   password: '',
-  confirmPassword: '',
-  role: 'host',
+  confirmPassword: ''
+  // role: 'host'
 };
 
 export default function SignUp() {
-  const [form, setForm] = useState(INITIAL_FORM);
+  const { signUp } = useAuth();
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: ''
+  });
   const [status, setStatus] = useState({ state: 'idle', message: '' });
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (form.password !== form.confirmPassword) {
+    if (formData.password !== formData.confirmPassword) {
       setStatus({ state: 'error', message: 'Passwords must match before submitting.' });
       return;
-    }
+    };
 
     setStatus({ state: 'loading', message: 'Submitting access request…' });
 
     try {
-      const payload = await registerUser({
-        name: form.name,
-        email: form.email,
-        password: form.password,
-        admin: form.role === 'producer',
+      const { success, message } = await signUp({
+        name: formData.username,
+        email: formData.email,
+        password: formData.password
       });
-      setStatus({ state: 'success', message: `${payload?.name ?? 'New host'} registered. Await approval email.` });
-      setForm(INITIAL_FORM);
+
+      if (!success) {
+        throw new Error(message || 'Registration failed');
+      };
+
+      setStatus({ state: 'success', message: /*`${payload?.name ?? 'New host'}*/ "registered." /*Await approval email.` */ });
+      // setFormData(INITIAL_FORM);
+      navigate('/');
+
       // TODO (Backend Team): include onboarding status (pending/approved) in response to guide UI confirmation.
-    } catch (error) {
-      setStatus({ state: 'error', message: error.message });
+
     }
+    catch (error) {
+      setStatus({ state: 'error', message: error.message });
+    };
   };
 
   const isSubmitting = status.state === 'loading';
@@ -62,14 +77,14 @@ export default function SignUp() {
       <PageSection title="Host Details" description="Accounts require approval before they go live.">
         <form className="form-grid form-grid--vertical" onSubmit={handleSubmit}>
           <label>
-            Full Name
+            Username
             <input
               type="text"
-              name="name"
-              value={form.name}
+              name="username"
+              value={formData.username}
               onChange={handleChange}
-              placeholder="Alex Kachur"
-              autoComplete="name"
+              placeholder="Alex_Kachur"
+              autoComplete="username"
               required
               disabled={isSubmitting}
             />
@@ -79,7 +94,7 @@ export default function SignUp() {
             <input
               type="email"
               name="email"
-              value={form.email}
+              value={formData.email}
               onChange={handleChange}
               placeholder="alex@familyfeud.ca"
               autoComplete="email"
@@ -92,7 +107,7 @@ export default function SignUp() {
             <input
               type="password"
               name="password"
-              value={form.password}
+              value={formData.password}
               onChange={handleChange}
               placeholder="••••••••"
               autoComplete="new-password"
@@ -105,7 +120,7 @@ export default function SignUp() {
             <input
               type="password"
               name="confirmPassword"
-              value={form.confirmPassword}
+              value={formData.confirmPassword}
               onChange={handleChange}
               placeholder="••••••••"
               autoComplete="new-password"
@@ -113,14 +128,18 @@ export default function SignUp() {
               disabled={isSubmitting}
             />
           </label>
-          <label className="form-grid__full">
+          {/* <label className="form-grid__full">
             Role Request
-            <select name="role" value={form.role} onChange={handleChange} disabled={isSubmitting}>
+            <select name="role" value={formData.role} onChange={handleChange} disabled={isSubmitting}>
               <option value="host">Host</option>
               <option value="producer">Producer</option>
             </select>
-          </label>
+          </label> */}
+
           {/* TODO (Backend Team): confirm whether producer should map to admin=true or a dedicated role collection. */}
+
+          {/* I think this is better as gamesession setup logic?  */}
+
           <div className="form-actions">
             <button type="submit" disabled={isSubmitting}>
               {isSubmitting ? 'Sending…' : 'Submit Request'}

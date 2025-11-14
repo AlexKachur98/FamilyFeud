@@ -7,35 +7,36 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageSection from '../components/PageSection.jsx';
-import { signIn } from '../utils/authClient.js';
-
-const INITIAL_FORM = {
-  email: '',
-  password: '',
-};
+import { useAuth } from '../components/auth/AuthContext.js';
 
 export default function SignIn() {
   const navigate = useNavigate();
-  const [form, setForm] = useState(INITIAL_FORM);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
   const [status, setStatus] = useState({ state: 'idle', message: '' });
+  const { signIn } = useAuth();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setStatus({ state: 'loading', message: 'Checking credentials…' });
-
     try {
-      const result = await signIn(form);
-      setStatus({ state: 'success', message: result.message });
-      setForm(INITIAL_FORM);
-      // TODO (Backend Team): expose host role + permissions so we can route users appropriately post-auth.
-      // TODO (Frontend): persist authenticated user in shared state/store once backend role data is available.
-    } catch (error) {
-      setStatus({ state: 'error', message: error.message });
+      const { success, message } = await signIn(formData.email, formData.password);
+      if (success) {
+        navigate('/');
+      } else {
+        setStatus({ state: 'error', message: message || 'SignIn Error…' });
+      }
+    }
+    catch (error) {
+      console.debug("SignIn: ", error)
+      setStatus({ state: 'error', message: error });
     }
   };
 
@@ -46,7 +47,7 @@ export default function SignIn() {
       <header className="page__header">
         <p className="eyebrow">Account</p>
         <h2>Sign In</h2>
-        <p>Enter your credentials to unlock host controls.</p>
+        {/* <p>Enter your credentials to unlock host controls.</p> */}
       </header>
 
       <PageSection title="Credentials" description="Accounts are provisioned by the production team.">
@@ -56,7 +57,7 @@ export default function SignIn() {
             <input
               type="email"
               name="email"
-              value={form.email}
+              value={formData.email}
               onChange={handleChange}
               placeholder="alex@familyfeud.ca"
               autoComplete="email"
@@ -69,7 +70,7 @@ export default function SignIn() {
             <input
               type="password"
               name="password"
-              value={form.password}
+              value={formData.password}
               onChange={handleChange}
               placeholder="••••••••"
               autoComplete="current-password"

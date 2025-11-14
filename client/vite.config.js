@@ -21,15 +21,9 @@ export default defineConfig(({ command }) => {
           target: environment === 'development'
             ? 'http://localhost:3000'
             : 'https://familyfeud-server.onrender.com',
-          changeOrigin: true,
-        },
-        '/auth': {
-          target: environment === 'development'
-            ? 'http://localhost:3000'
-            : 'https://familyfeud-server.onrender.com',
-          changeOrigin: true,
-        },
-      },
+          changeOrigin: true
+        }
+      }
     }
   }
-})
+});
