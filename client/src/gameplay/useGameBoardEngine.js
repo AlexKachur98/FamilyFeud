@@ -12,6 +12,7 @@ import {
   SLOT_COUNT,
   TIMER_CONFIG,
   TIMER_LABELS,
+  getRoundBucket,
 } from './gameBoardConstants.js';
 import { getOpponentIndex, isSpaceKey, normalize } from './gameBoardUtils.js';
 import { ai, questions } from '../utils/api.js';
@@ -138,13 +139,21 @@ export default function useGameBoardEngine(players = PLAYER_PLACEHOLDERS) {
   );
 
   // Pulls a random question from the backend and seeds the board placeholders.
-  const loadRound = useCallback(async () => {
+const loadRound = useCallback(async () => {
     setRoundStatus({ state: 'loading', message: 'Loading question…' });
     setPhase('loading');
     try {
-      const response = await questions.getRandom();
+      const bucket = getRoundBucket(roundIndex);
+      const requestOptions = bucket
+        ? {
+            ...(bucket.minAnswers ? { minAnswers: bucket.minAnswers } : {}),
+            ...(bucket.maxAnswers ? { maxAnswers: bucket.maxAnswers } : {}),
+          }
+        : {};
+
+      const response = await questions.getRandom(requestOptions);
       const payload = await parseResponse(response);
-      const size = Math.max(0, Math.min(payload?.size ?? SLOT_COUNT, SLOT_COUNT));
+      const size = Math.max(0, Math.min(payload?.size ?? payload?.answers?.length ?? SLOT_COUNT, SLOT_COUNT));
       const slots = buildEmptySlots(size);
       const theme = ROUND_THEMES[roundIndex % TOTAL_ROUNDS] ?? ROUND_THEMES[0] ?? {};
       setCurrentRound({
@@ -551,10 +560,8 @@ export default function useGameBoardEngine(players = PLAYER_PLACEHOLDERS) {
   const roundComplete = phase === 'roundSummary' || phase === 'gameComplete';
   const showPlayOrPassActions = phase === 'playOrPass';
   const showRoundAdvanceAction = roundComplete;
-  const roundOverlayAsset =
-    currentRound?.overlayAsset ??
-    ROUND_THEMES[roundIndex % TOTAL_ROUNDS]?.overlayAsset ??
-    '/Round_One.png';
+  const roundTheme = ROUND_THEMES[roundIndex % TOTAL_ROUNDS] ?? ROUND_THEMES[0];
+  const roundOverlayAsset = currentRound?.overlayAsset ?? roundTheme?.overlayAsset ?? '/Round_One.png';
 
   return {
     // data

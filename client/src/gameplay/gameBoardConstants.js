@@ -71,6 +71,17 @@ export const ROUND_THEMES = [
   { id: 'round-4', label: 'Round 4 · Triple Points', overlayAsset: '/Round_Four.png', multiplier: 3 },
 ];
 
+export const QUESTION_ROUND_BUCKETS = [
+  { minAnswers: 5, maxAnswers: 6 },
+  { minAnswers: 5, maxAnswers: 6 },
+  { minAnswers: 7, maxAnswers: 8 },
+  { maxAnswers: 4 },
+];
+
+export const getRoundBucket = (roundIndex = 0) => (
+  QUESTION_ROUND_BUCKETS[roundIndex % QUESTION_ROUND_BUCKETS.length] ?? null
+);
+
 export const TIMER_CONFIG = {
   faceoffBuzz: 6,
   faceoffAnswer: 6,
