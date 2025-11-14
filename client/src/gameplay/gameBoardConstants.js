@@ -6,7 +6,8 @@
  */
 export const SLOT_COUNT = 8;
 export const QUESTION_CARD_ASSET = '/Question_Card.png';
-export const TIMER_CARD_ASSET = '/Answer_Card_0.png';
+export const ANSWER_CARD_ASSET = '/Answer_Card.png';
+export const TIMER_CARD_ASSET = ANSWER_CARD_ASSET;
 export const EMPTY_CARD_ASSET = '/Hidden_Card_Empty.png';
 export const HIDDEN_CARD_ASSETS = [
   '/Hidden_Card_1.png',
@@ -52,13 +53,13 @@ export const PLAYER_PLACEHOLDERS = [
     label: 'Team A',
     playerName: 'Player One',
     avatar: '/Default_Avatar.jpg',
-    scoreCard: '/Answer_Card_50.png',
+    scoreCard: ANSWER_CARD_ASSET,
   },
   {
     label: 'Team B',
     playerName: 'Player Two',
     avatar: '/Default_Avatar.jpg',
-    scoreCard: '/Answer_Card_50.png',
+    scoreCard: ANSWER_CARD_ASSET,
   },
 ];
 

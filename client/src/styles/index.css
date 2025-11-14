@@ -1039,7 +1039,7 @@ button:focus-visible {
   position: absolute;
   inset: 0;
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 0.75rem;
   padding: 0 1.4rem;
@@ -1056,6 +1056,13 @@ button:focus-visible {
 .game-board-grid__slot-answer {
   font-size: 1.1rem;
   text-align: left;
+}
+
+.game-board-grid__slot-points {
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-align: right;
+  min-width: 3rem;
 }
 
 .game-board-console {

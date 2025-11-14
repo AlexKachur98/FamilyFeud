@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PRIMARY_NAV_LINKS } from '../utils/navigation.js';
 import {
+  ANSWER_CARD_ASSET,
   ANSWERING_PHASES,
   DISPLAY_ORDER,
   EMPTY_CARD_ASSET,
@@ -151,7 +152,7 @@ export default function GameBoard() {
                   if (slot) {
                     cardAsset =
                       slotState === true
-                        ? `/Answer_Card_${slot.points}.png`
+                        ? ANSWER_CARD_ASSET
                         : HIDDEN_CARD_ASSETS[slotIndex] ?? EMPTY_CARD_ASSET;
                   }
                   const revealed = slot && slotState === true;
@@ -162,16 +163,17 @@ export default function GameBoard() {
                         slotState === 'empty' ? ' game-board-grid__slot--empty' : ''
                       }`}
                       style={{ backgroundImage: `url(${cardAsset})` }}
-                    >
-                      {revealed ? (
-                        <div className="game-board-grid__slot-text">
-                          <span className="game-board-grid__slot-rank">{slot.rank}</span>
-                          <span className="game-board-grid__slot-answer">{slot.answer}</span>
-                        </div>
-                      ) : null}
-                    </div>
-                  );
-                })}
+                      >
+                        {revealed ? (
+                          <div className="game-board-grid__slot-text">
+                            <span className="game-board-grid__slot-rank">{slot.rank}</span>
+                            <span className="game-board-grid__slot-answer">{slot.answer}</span>
+                            <span className="game-board-grid__slot-points">{slot.points ?? 0}</span>
+                          </div>
+                        ) : null}
+                      </div>
+                    );
+                  })}
               </section>
 
               <div className="game-board-sides" aria-label="Player placeholders">
