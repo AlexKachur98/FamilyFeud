@@ -4,7 +4,7 @@
  * @since 2025-11-11
  * @purpose Interactive Family Feud board prototype that now delegates game logic to the gameplay engine.
  */
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PRIMARY_NAV_LINKS } from '../utils/navigation.js';
 import {
@@ -68,6 +68,11 @@ export default function GameBoard() {
     advanceRound,
     reloadRound,
   } = useGameBoardEngine(players);
+  const [statusDismissed, setStatusDismissed] = useState(false);
+
+  useEffect(() => {
+    if (roundStatus.state !== 'error') setStatusDismissed(false);
+  }, [roundStatus.state]);
 
   const strikesDisplay = Array.from({ length: 3 }, (_, index) => (
     <span key={index} className={index < strikes ? 'is-hit' : ''}>
@@ -124,11 +129,14 @@ export default function GameBoard() {
             </div>
           ) : null}
 
-          {roundStatus.state === 'error' ? (
+          {roundStatus.state === 'error' && !statusDismissed ? (
             <div className="game-board-round-error" aria-live="assertive">
               <p>{roundStatus.message || 'Unable to load question.'}</p>
               <button type="button" onClick={reloadRound}>
                 Retry Question
+              </button>
+              <button type="button" onClick={() => setStatusDismissed(true)}>
+                Dismiss
               </button>
             </div>
           ) : null}
