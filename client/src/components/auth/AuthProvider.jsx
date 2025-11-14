@@ -1,8 +1,8 @@
 
 import { useState, useEffect } from 'react';
 import { AuthContext } from './AuthContext';
+import { auth } from '../../utils/api';
 
-import { apiFetch } from '../../utils/api';
 
 export default function AuthProvider({ children }) {
   const
@@ -12,7 +12,7 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const res = await apiFetch('/api/v1/auth/validate');
+        const res = await auth.validate();
 
         if (res.ok) {
           const data = await res.json();
@@ -35,11 +35,7 @@ export default function AuthProvider({ children }) {
 
   const signIn = async (email, password) => {
     try {
-      const res = await apiFetch('/api/v1/auth/signin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
+      const res = await auth.signin(email, password);
 
       if (!res.ok) {
         return { success: false, message: 'Login res failed' };
@@ -60,11 +56,7 @@ export default function AuthProvider({ children }) {
 
   const signUp = async (name, email, password) => {
     try {
-      const res = await apiFetch('/api/v1/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password })
-      });
+      const res = await auth.signup(name, email, password);
 
       if (!res.ok) {
         const e = await res.json();
@@ -84,9 +76,7 @@ export default function AuthProvider({ children }) {
 
   const signOut = async () => {
     try {
-      await apiFetch('/api/v1/auth/signout', {
-        method: 'GET'
-      });
+      await auth.signout();
 
       setIsLoggedIn(false);
       setUser(null);
