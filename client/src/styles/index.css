@@ -143,6 +143,20 @@ button:focus-visible {
   padding: 0;
 }
 
+.profile-avatar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.avatar-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  object-fit: contain;
+}
+
 .page {
   max-width: 960px;
   margin: 0 auto;

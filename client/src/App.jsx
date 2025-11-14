@@ -20,6 +20,7 @@ import QuestionSets from './pages/QuestionSets.jsx';
 import Sessions from './pages/Sessions.jsx';
 import PlayerJoin from './pages/PlayerJoin.jsx';
 import GameBoard from './pages/GameBoard.jsx';
+import UserProfile from './pages/UserProfile.jsx';
 
 import NotFound from './pages/NotFound.jsx';
 import UnderConstruction from './pages/UnderConstruction.jsx';
@@ -42,6 +43,7 @@ export default function App() {
             <Route path="signup" element={<SignUp />} />
             <Route path="under-construction" element={<UnderConstruction />} />
             <Route path="signed-out" element={<SignedOut />} />
+            <Route path="profile" element={<UserProfile />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
