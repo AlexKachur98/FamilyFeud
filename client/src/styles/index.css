@@ -655,6 +655,7 @@ button:focus-visible {
   width: 100%;
   min-height: 100vh;
   overflow: hidden;
+  background-color: #1c2f73; /* Family Feud deep blue fallback behind translucent art */
   --board-width: min(880px, 92vw);
 }
 
