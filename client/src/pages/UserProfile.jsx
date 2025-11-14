@@ -7,7 +7,7 @@
 
 import { useState } from 'react';
 import PageSection from '../components/PageSection.jsx';
-import profileIcon from '../assets/icon.png';
+import profileIcon from '../assets/Icon.png';
 
 export default function UserProfile() {
     const [formData, setFormData] = useState({
