@@ -73,7 +73,7 @@ export default {
         user = await User.findOne({ "email": email });
 
       if (!user) return res.status(401).json({ error: "User not found" });
-      if (!user.comparePassword(password)) return res.status(401).send({ error: "Passwords don't match." });
+      if (!await user.comparePassword(password)) return res.status(401).send({ error: "Passwords don't match." });
 
       const token = generateToken(user);
       res.cookie('t', token, {
