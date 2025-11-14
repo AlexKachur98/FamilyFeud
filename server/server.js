@@ -31,7 +31,7 @@ catch (e) {
 const app = express();
 app
   .use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: process.env.VITE_CLIENT_URL || 'http://localhost:5173',
     credentials: true
   }))
   .use(compress())
@@ -57,5 +57,3 @@ app
       ? console.log(`Server running on http://localhost:${config.port}/`)
       : console.log(`Server running on https://dailygrind-server.onrender.com`);
   });
-
-export default app;
