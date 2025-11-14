@@ -63,68 +63,12 @@ export const PLAYER_PLACEHOLDERS = [
   },
 ];
 
-// TODO (Gameplay): Replace this placeholder round data with the real JSON feed once the backend lands.
-export const ROUND_DATA = [
-  {
-    id: 'round-1',
-    label: 'Round 1 · Single Points',
-    overlayAsset: '/Round_One.png',
-    multiplier: 1,
-    question: 'Name something people double-check before leaving the house.',
-    answers: [
-      { answer: 'Lights off', points: 50, aliases: ['turn off lights', 'lights'] },
-      { answer: 'Doors locked', points: 40, aliases: ['lock doors', 'doors'] },
-      { answer: 'Stove or oven', points: 30, aliases: ['stove', 'oven', 'range'] },
-      { answer: 'Wallet or purse', points: 20, aliases: ['wallet', 'purse'] },
-      { answer: 'Car keys', points: 10, aliases: ['keys', 'car key'] },
-      { answer: 'Phone', points: 5, aliases: ['cellphone', 'cell phone'] },
-    ],
-  },
-  {
-    id: 'round-2',
-    label: 'Round 2 · Single Points',
-    overlayAsset: '/Round_Two.png',
-    multiplier: 1,
-    question: 'Name a reason people wake up in the middle of the night.',
-    answers: [
-      { answer: 'Bathroom break', points: 50, aliases: ['use bathroom', 'bathroom'] },
-      { answer: 'Noise', points: 40, aliases: ['loud noise', 'noises'] },
-      { answer: 'Bad dream', points: 30, aliases: ['nightmare', 'dream'] },
-      { answer: 'Thirsty', points: 20, aliases: ['get water', 'water'] },
-      { answer: 'Check phone', points: 10, aliases: ['phone', 'texts'] },
-      { answer: 'Hunger', points: 5, aliases: ['snack'] },
-    ],
-  },
-  {
-    id: 'round-3',
-    label: 'Round 3 · Double Points',
-    overlayAsset: '/Round_Three.png',
-    multiplier: 2,
-    question: 'Name something you always pack for a beach trip.',
-    answers: [
-      { answer: 'Sunscreen', points: 50, aliases: ['sunblock', 'sun screen'] },
-      { answer: 'Towel', points: 40, aliases: ['beach towel'] },
-      { answer: 'Swimsuit', points: 30, aliases: ['swim suit', 'trunks'] },
-      { answer: 'Sunglasses', points: 20, aliases: ['glasses', 'shades'] },
-      { answer: 'Flip-flops', points: 10, aliases: ['sandals'] },
-      { answer: 'Snacks', points: 5, aliases: ['food'] },
-    ],
-  },
-  {
-    id: 'round-4',
-    label: 'Round 4 · Triple Points',
-    overlayAsset: '/Round_Four.png',
-    multiplier: 3,
-    question: 'Name something you do right before going to bed.',
-    answers: [
-      { answer: 'Brush teeth', points: 50, aliases: ['teeth', 'brush'] },
-      { answer: 'Set alarm', points: 40, aliases: ['alarm clock', 'set the alarm'] },
-      { answer: 'Check phone', points: 30, aliases: ['phone', 'scroll phone'] },
-      { answer: 'Drink water', points: 20, aliases: ['glass of water'] },
-      { answer: 'Read', points: 10, aliases: ['book', 'reading'] },
-      { answer: 'Pray or meditate', points: 5, aliases: ['pray', 'meditate'] },
-    ],
-  },
+// Round themes provide overlay + multiplier context per round index.
+export const ROUND_THEMES = [
+  { id: 'round-1', label: 'Round 1 · Single Points', overlayAsset: '/Round_One.png', multiplier: 1 },
+  { id: 'round-2', label: 'Round 2 · Single Points', overlayAsset: '/Round_Two.png', multiplier: 1 },
+  { id: 'round-3', label: 'Round 3 · Double Points', overlayAsset: '/Round_Three.png', multiplier: 2 },
+  { id: 'round-4', label: 'Round 4 · Triple Points', overlayAsset: '/Round_Four.png', multiplier: 3 },
 ];
 
 export const TIMER_CONFIG = {
