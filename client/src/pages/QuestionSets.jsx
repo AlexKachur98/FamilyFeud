@@ -71,7 +71,7 @@ export default function QuestionSets() {
     };
 
     try {
-      console.log("formdata: ", formData);
+      
       const response = await apiFetch('/question-sets', {
         method: 'POST',
         credentials: 'include',
