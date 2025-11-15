@@ -3,6 +3,8 @@ import generateToken from '../utils/jwt.js'
 import User from '../models/user.model.js'
 import { handleUserSaveError } from '../helpers/dbErrorHandler.js'
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 export default {
 
   signup: async (req, res) => {
@@ -41,8 +43,8 @@ export default {
 
       res.cookie('t', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        secure: isProduction,
+        sameSite: isProduction ? 'strict' : 'lax',
         maxAge: 3600000
       });
 
@@ -78,8 +80,8 @@ export default {
       const token = generateToken(user);
       res.cookie('t', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        secure: isProduction,
+        sameSite: isProduction ? 'strict' : 'lax',
         maxAge: 3600000
       });
 
