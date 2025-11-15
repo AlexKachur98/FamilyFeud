@@ -134,3 +134,4 @@ const deleteQuestion = async (req, res) => {
 };
 
 export default { getAllQuestions, getQuestion, getRandomQuestion, createQuestion, updateQuestion, deleteQuestion };
+export {ROUND_BUCKETS};
