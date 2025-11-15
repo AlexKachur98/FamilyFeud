@@ -1398,18 +1398,6 @@ button:focus-visible {
   margin-left: 1rem;
 }
 
-.empty-state {
-  padding: 1.5rem;
-  text-align: center;
-  background: rgba(0, 0, 0, 0.02);
-  border-radius: 4px;
-  margin: 1rem 0;
-}
-
-.empty-state p {
-  margin: 0.5rem 0;
-  color: #666;
-}
 
 .answer-list__row {
   display: flex;
