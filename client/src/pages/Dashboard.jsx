@@ -1,18 +1,84 @@
-/**
- * @file Dashboard.jsx
- * @author Alex Kachur
- * @since 2025-11-04
- * @purpose Host landing screen summarizing Family Feud content and live sessions.
- */
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageSection from '../components/PageSection.jsx';
-import { getQuestionSets } from '../utils/questionSets.js';
-import { getActiveSessions } from '../utils/gameSessions.js';
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const questionSets = getQuestionSets();
-  const sessions = getActiveSessions();
+  const [questionSets, setQuestionSets] = useState([]);
+  const [sessions, setSessions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
+  const [stats, setStats] = useState({
+    totalSets: 0,
+    doubleTriple: 0,
+    holiday: 0,
+    totalQuestions: 0
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch question sets (non-critical - can fail gracefully)
+        try {
+          const setsResponse = await fetch('/api/v1/question-sets', {
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+          });
+
+          let setsData = [];
+          if (setsResponse.ok) {
+            setsData = await setsResponse.json();
+          } else {
+            console.warn('Question sets fetch warning:', await setsResponse.text());
+          }
+
+          // Calculate stats safely
+          const calculatedStats = {
+            totalSets: setsData.length,
+            doubleTriple: setsData.filter(set => set.roundType !== 'single').length,
+            holiday: setsData.filter(set => set.tags?.includes('holiday')).length,
+            totalQuestions: setsData.reduce((sum, set) => sum + (set.questions?.length || 0), 0)
+          };
+          setStats(calculatedStats);
+          setQuestionSets(setsData);
+        } catch (setsErr) {
+          console.error('Question sets fetch error:', setsErr);
+          // We'll still show the dashboard, just with empty question sets
+        }
+
+        // Fetch sessions (also non-critical)
+        try {
+          const sessionsResponse = await fetch('/api/v1/gamesession', {
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+          });
+
+          if (sessionsResponse.ok) {
+            const sessionsData = await sessionsResponse.json();
+            setSessions(sessionsData);
+          } else {
+            console.warn('Sessions fetch warning:', await sessionsResponse.text());
+          }
+        } catch (sessionsErr) {
+          console.error('Sessions fetch error:', sessionsErr);
+          // We'll still show the dashboard, just with empty sessions
+        }
+
+      } catch (err) {
+        // Only set error for completely unexpected errors
+        console.error('Unexpected error:', err);
+        setFetchError('An unexpected error occurred. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <div className="page page--stacked">Loading dashboard...</div>;
+  }
 
   return (
     <div className="page page--stacked">
@@ -22,6 +88,13 @@ export default function Dashboard() {
         <p>Review high-level activity before launching your next Family Feud session.</p>
       </header>
 
+      {fetchError && (
+        <div className="global-error">
+          <p>{fetchError}</p>
+          <button onClick={() => window.location.reload()}>Retry</button>
+        </div>
+      )}
+
       <PageSection
         title="Content Overview"
         description="Track the question sets available for upcoming matches."
@@ -29,53 +102,117 @@ export default function Dashboard() {
         <div className="grid grid--stats">
           <article>
             <p>Total Sets</p>
-            <strong>{questionSets.length}</strong>
+            <strong>{stats.totalSets}</strong>
           </article>
           <article>
             <p>Double/Triple Rounds</p>
-            <strong>{questionSets.filter((set) => set.roundType !== 'single').length}</strong>
+            <strong>{stats.doubleTriple}</strong>
           </article>
           <article>
             <p>Tagged for Holiday Shows</p>
-            <strong>{questionSets.filter((set) => set.tags.includes('holiday')).length}</strong>
+            <strong>{stats.holiday}</strong>
+          </article>
+          <article>
+            <p>Total Questions</p>
+            <strong>{stats.totalQuestions}</strong>
           </article>
         </div>
       </PageSection>
 
       <PageSection
+        title="Question Sets"
+        description="Manage your question sets."
+        actions={<button type="button" onClick={() => navigate('/question-sets/create')}>Create New Set</button>}
+      >
+        {questionSets.length === 0 ? (
+          <div className="empty-state">
+            <p>No question sets found.</p>
+            <p>Create your first question set to organize your game content.</p>
+            <button
+              type="button"
+              className="primary-button"
+              onClick={() => navigate('/question-sets/create')}
+            >
+              Create First Question Set
+            </button>
+          </div>
+        ) : (
+          <div className="table-placeholder">
+            <div className="table-placeholder__row table-placeholder__row--head">
+              <span>Title</span>
+              <span>Round Type</span>
+              <span>Questions</span>
+              <span>Tags</span>
+              <span>Actions</span>
+            </div>
+            {questionSets.map((set) => (
+              <div key={set._id} className="table-placeholder__row">
+                <span>{set.title}</span>
+                <span>{set.roundType}</span>
+                <span>{set.questions?.length || 0}</span>
+                <span>{set.tags?.join(', ') || 'None'}</span>
+                <span>
+                  <button
+                    type="button"
+                    className="link-button"
+                    onClick={() => navigate(`/question-sets/${set._id}`)}
+                  >
+                    View
+                  </button>
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </PageSection>
+
+      <PageSection
         title="Active Sessions"
         description="Monitor lobbies and live games."
-        actions={<button type="button" onClick={() => navigate('/under-construction')}>Create Session</button>}
+        actions={<button type="button" onClick={() => navigate('/sessions/create')}>Create Session</button>}
       >
-        <div className="table-placeholder">
-          <div className="table-placeholder__row table-placeholder__row--head">
-            <span>Code</span>
-            <span>Status</span>
-            <span>Question Set</span>
-            <span>Teams</span>
-            <span>Updated</span>
-            <span>Actions</span>
+        {sessions.length === 0 ? (
+          <div className="empty-state">
+            <p>No active sessions.</p>
+            <p>Create a new session to start a game.</p>
+            <button
+              type="button"
+              className="primary-button"
+              onClick={() => navigate('/sessions/create')}
+            >
+              Create New Session
+            </button>
           </div>
-          {sessions.map((session) => (
-            <div key={session.id} className="table-placeholder__row">
-              <span>{session.accessCode}</span>
-              <span>{session.status}</span>
-              <span>{session.questionSetId}</span>
-              <span>{session.teams.map((team) => team.name).join(' vs ')}</span>
-              <span>{new Date(session.updatedAt).toLocaleTimeString()}</span>
-              <span>
-                <button
-                  type="button"
-                  className="link-button"
-                  onClick={() => navigate('/under-construction')}
-                >
-                  Open
-                </button>
-              </span>
+        ) : (
+          <div className="table-placeholder">
+            <div className="table-placeholder__row table-placeholder__row--head">
+              <span>Code</span>
+              <span>Status</span>
+              <span>Question Set</span>
+              <span>Teams</span>
+              <span>Updated</span>
+              <span>Actions</span>
             </div>
-          ))}
-        </div>
-        {/* TODO (Backend Team): replace placeholder data with GET /api/sessions response. */}
+            {sessions.map((session) => (
+              <div key={session.id} className="table-placeholder__row">
+                <span>{session.accessCode}</span>
+                <span>{session.status}</span>
+                <span>{session.questionSetId || 'None'}</span>
+                <span>{session.teams?.map((team) => team.name).join(' vs ') || 'None'}</span>
+                <span>{session.updatedAt ? new Date(session.updatedAt).toLocaleTimeString() : 'Never'}</span>
+                <span>
+                  <button
+                    type="button"
+                    className="link-button"
+                    onClick={() => navigate(`/sessions/${session.id}`)}
+                  >
+                    Open
+                  </button>
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </PageSection>
 
       <PageSection
@@ -83,11 +220,10 @@ export default function Dashboard() {
         description="Launch the most common workflows from one place."
       >
         <div className="action-grid">
-          <button type="button" onClick={() => navigate('/under-construction')}>Import Survey CSV</button>
-          <button type="button" onClick={() => navigate('/under-construction')}>Start Fast Money</button>
-          <button type="button" onClick={() => navigate('/under-construction')}>View Analytics</button>
+          <button type="button" onClick={() => navigate('/questions/import')}>Import Questions</button>
+          <button type="button" onClick={() => navigate('/fast-money')}>Start Fast Money</button>
+          <button type="button" onClick={() => navigate('/analytics')}>View Analytics</button>
         </div>
-        {/* TODO (Backend Team): wire quick actions to respective endpoints/workflows. */}
       </PageSection>
     </div>
   );
