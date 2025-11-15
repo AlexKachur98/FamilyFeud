@@ -1398,18 +1398,6 @@ button:focus-visible {
   margin-left: 1rem;
 }
 
-
-.answer-list__row {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.answer-list__row input {
-  flex: 1;
-}
-
-.form-help {
   color: #666;
   font-size: 0.9rem;
   margin: 0.5rem 0;
