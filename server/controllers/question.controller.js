@@ -109,4 +109,28 @@ const createQuestion = async (req, res) => {
     }
 };
 
-export default { getAllQuestions, getQuestion, getRandomQuestion, createQuestion };
+const updateQuestion = async (req, res) => {
+    try {
+        const updatedQuestion = await QuestionModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!updatedQuestion) {
+            return res.status(404).json({ message: 'Question not found' });
+        }
+        res.status(200).json(updatedQuestion);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const deleteQuestion = async (req, res) => {
+    try {
+        const deletedQuestion = await QuestionModel.findByIdAndDelete(req.params.id);
+        
+        if (!deletedQuestion) return res.status(404).json({ message: 'Question not found' });
+
+        res.status(200).json({ message: 'Question deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export default { getAllQuestions, getQuestion, getRandomQuestion, createQuestion, updateQuestion, deleteQuestion };

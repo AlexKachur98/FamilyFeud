@@ -41,7 +41,7 @@ export default {
 
       res.cookie('t', token, {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
         maxAge: 3600000
       });
@@ -78,7 +78,7 @@ export default {
       const token = generateToken(user);
       res.cookie('t', token, {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
         maxAge: 3600000
       });

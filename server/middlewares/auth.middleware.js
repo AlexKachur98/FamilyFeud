@@ -26,9 +26,9 @@ const requireSignin = (req, res, next) => {
 };
 
 const hasAuthorization = (req, res, next) => {
-  const authorized = req.params && req.auth && (
-    req.params.id == req.auth._id ||
-    req.auth.admin
+  const authorized = req.params && req.user && (
+    req.params.id == req.user._id ||
+    req.user.admin
   );
 
   if (!authorized) return res.status(403).json({ error: "User is not authorized" });

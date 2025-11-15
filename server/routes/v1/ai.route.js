@@ -1,10 +1,11 @@
 import express from 'express';
+
+import authMiddleware from '../../middlewares/auth.middleware.js';
 import aiController from '../../controllers/ai.controller.js';
-// import authMiddleware from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
-// Add middleware once authentication and user is finished
-router.post('/:questionId', aiController.getAiResponse);
+// Protected routes
+router.post('/:questionId', authMiddleware.requireSignin, aiController.getAiResponse);
 
 export default router;
