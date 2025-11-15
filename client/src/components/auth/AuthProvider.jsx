@@ -12,18 +12,13 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const res = await auth.validate();
+        const
+          res = await auth.validate(),
+          data = await res.json();
 
-        if (res.ok) {
-          const data = await res.json();
-          setIsLoggedIn(true);
-          setUser(data.user);
-        }
-        else {
-          setIsLoggedIn(false);
-          setUser(null);
-        };
-      }
+        setIsLoggedIn(data.valid);
+        setUser(data.user);
+      } 
       catch (e) {
         console.error('Session check failed:', e);
         setIsLoggedIn(false);

@@ -13,15 +13,14 @@ const requireSignin = (req, res, next) => {
   else if (req.cookies.t)
     token = req.cookies.t;
 
-  if (!token) return res.status(401).json({ error: "Unauthorized" });
+  if (!token) return res.json({ valid: false, user: null });
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+    req.user = jwt.verify(token, process.env.JWT_SECRET);
     next();
   }
   catch (_) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.json({ valid: false, user: null });
   };
 };
 
