@@ -73,11 +73,11 @@ export const updateQuestionSet = async (req, res) => {
         prompt,
         roundType,
         tags: tags || [],
-        questions: questionIds || [],
+        answers: questionIds || [],
         updatedAt: new Date()
       },
       { new: true }
-    ).populate('questions');
+    ).populate('answers');
 
     if (!updatedSet) {
       return res.status(404).json({ message: 'Question set not found' });
