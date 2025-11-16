@@ -4,8 +4,13 @@
  * @since 2025-11-11
  * @purpose Interactive Family Feud board prototype that now delegates game logic to the gameplay engine.
  */
+
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+
+import { useAuth } from '../components/auth/AuthContext.js';
+import useGameBoardEngine from '../gameplay/useGameBoardEngine.js';
+
 import { PRIMARY_NAV_LINKS } from '../utils/navigation.js';
 import {
   ANSWER_CARD_ASSET,
@@ -17,14 +22,14 @@ import {
   QUESTION_CARD_ASSET,
   TIMER_CARD_ASSET,
 } from '../gameplay/gameBoardConstants.js';
-import useGameBoardEngine from '../gameplay/useGameBoardEngine.js';
-import { useAuth } from '../components/auth/AuthContext.js';
+
 
 export default function GameBoard() {
   const [menuOpen, setMenuOpen] = useState(false);
   const toggleMenu = () => setMenuOpen((value) => !value);
   const closeMenu = () => setMenuOpen(false);
   const { user } = useAuth();
+
   const players = useMemo(() => {
     if (!user) return PLAYER_PLACEHOLDERS;
     // TODO: Replace default avatar with user-provided image when backend exposes it.
@@ -69,24 +74,25 @@ export default function GameBoard() {
     reloadRound,
   } = useGameBoardEngine(players);
   const [statusDismissed, setStatusDismissed] = useState(false);
+  const strikesDisplay = useMemo(
+    () => Array.from({ length: 3 }, (_, index) => <span key={index} className={index < strikes ? 'is-hit' : ''}>X</span>),
+    [strikes]
+  );
+  // Prefer backend prompt text, but fall back to status to keep the UI informative.
+  const questionText = useMemo(
+    () => currentRound?.question ?? (roundStatus.state === 'loading'
+      ? roundStatus.message || 'Loading question…'
+      : roundStatus.message || 'Question unavailable'
+    ),
+    [currentRound, roundStatus]
+  );
+  const roundLabel = currentRound?.label ?? 'Round';
+  const roundMultiplier = currentRound?.multiplier ?? 1;
+
 
   useEffect(() => {
     if (roundStatus.state !== 'error') setStatusDismissed(false);
   }, [roundStatus.state]);
-
-  const strikesDisplay = Array.from({ length: 3 }, (_, index) => (
-    <span key={index} className={index < strikes ? 'is-hit' : ''}>
-      X
-    </span>
-  ));
-  // Prefer backend prompt text, but fall back to status to keep the UI informative.
-  const questionText =
-    currentRound?.question ??
-    (roundStatus.state === 'loading'
-      ? roundStatus.message || 'Loading question…'
-      : roundStatus.message || 'Question unavailable');
-  const roundLabel = currentRound?.label ?? 'Round';
-  const roundMultiplier = currentRound?.multiplier ?? 1;
 
   return (
     <div className="landing-basic game-board">
@@ -111,7 +117,7 @@ export default function GameBoard() {
             src="/Gameboard_Backround.jpg"
             alt="Family Feud stage backdrop"
             className="game-board__bg"
-            loading="lazy"
+            // loading="lazy"
           />
 
           {phase === 'intro' && roundStatus.state === 'idle' ? (
@@ -209,21 +215,20 @@ export default function GameBoard() {
                   return (
                     <div
                       key={slotIndex}
-                      className={`game-board-grid__slot${revealed ? ' game-board-grid__slot--revealed' : ''}${
-                        slotState === 'empty' ? ' game-board-grid__slot--empty' : ''
-                      }`}
+                      className={`game-board-grid__slot${revealed ? ' game-board-grid__slot--revealed' : ''}${slotState === 'empty' ? ' game-board-grid__slot--empty' : ''
+                        }`}
                       style={{ backgroundImage: `url(${cardAsset})` }}
-                      >
-                        {revealed ? (
-                          <div className="game-board-grid__slot-text">
-                            <span className="game-board-grid__slot-rank">{slot.rank}</span>
-                            <span className="game-board-grid__slot-answer">{slot.answer}</span>
-                            <span className="game-board-grid__slot-points">{slot.points ?? 0}</span>
-                          </div>
-                        ) : null}
-                      </div>
-                    );
-                  })}
+                    >
+                      {revealed ? (
+                        <div className="game-board-grid__slot-text">
+                          <span className="game-board-grid__slot-rank">{slot.rank}</span>
+                          <span className="game-board-grid__slot-answer">{slot.answer}</span>
+                          <span className="game-board-grid__slot-points">{slot.points ?? 0}</span>
+                        </div>
+                      ) : null}
+                    </div>
+                  );
+                })}
               </section>
 
               <div className="game-board-sides" aria-label="Player placeholders">
@@ -324,7 +329,7 @@ export default function GameBoard() {
       <nav
         id="gameboard-drawer"
         className={`landing-basic__drawer${menuOpen ? ' landing-basic__drawer--open' : ''}`}
-        aria-hidden={!menuOpen}
+        inert={!menuOpen}
       >
         <button type="button" className="landing-basic__drawer-close" onClick={closeMenu} aria-label="Close menu">
           ×
@@ -341,4 +346,4 @@ export default function GameBoard() {
       </nav>
     </div>
   );
-}
+};
