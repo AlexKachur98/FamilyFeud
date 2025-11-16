@@ -18,9 +18,9 @@ export default function AuthProvider({ children }) {
 
         setIsLoggedIn(data.valid);
         setUser(data.user);
-      } 
+      }
       catch (e) {
-        console.error('Session check failed:', e);
+        // console.error('Session check failed:', e);
         setIsLoggedIn(false);
         setUser(null);
       };
@@ -32,9 +32,7 @@ export default function AuthProvider({ children }) {
     try {
       const res = await auth.signin(email, password);
 
-      if (!res.ok) {
-        return { success: false, message: 'Login res failed' };
-      }
+      if (!res.ok) return { success: false, message: 'Login failed' };
 
       const data = await res.json();
 
@@ -44,14 +42,14 @@ export default function AuthProvider({ children }) {
       return { success: true };
     }
     catch (e) {
-      console.error('Login error:', e);
+      // console.error('Login error:', e);
       return { success: false, message: e.message };
     };
   };
 
-  const signUp = async (name, email, password) => {
+  const signUp = async (username, email, password) => {
     try {
-      const res = await auth.signup(name, email, password);
+      const res = await auth.signup(username, email, password);
 
       if (!res.ok) {
         const e = await res.json();
@@ -78,7 +76,7 @@ export default function AuthProvider({ children }) {
       return { success: true };
     }
     catch (e) {
-      console.error('Logout error:', e);
+      // console.error('Logout error:', e);
       return { success: false, message: e.message };
     };
   };

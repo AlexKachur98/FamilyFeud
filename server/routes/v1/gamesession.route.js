@@ -28,6 +28,6 @@ export default Router()
   .post('/:id/team/:teamId/award-points', authMiddleware.requireSignin, awardPoints)
   .post('/:id/end-round', authMiddleware.requireSignin, endRound)
 
-  // Admin-only routes
+  // Admin-only routes rethink or refactor
   .get('/', authMiddleware.requireSignin, /*authMiddleware.hasAuthorization,*/ getAllGameSessions)
 

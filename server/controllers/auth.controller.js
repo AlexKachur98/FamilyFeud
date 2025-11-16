@@ -20,12 +20,14 @@ export default {
           user = await stagedUser.save();
         }
         catch (e) {
+          // new formats to handle
           const value = await handleUserSaveError(e);
+
           if (Array.isArray(value)) {
             return res.status(400).json({ message: `${value[0].toUpperCase()}: [ ${value[1]} ] is already in use.` });
           }
-          else if (value.name) {
-            stagedUser = new User(value)
+          else if (value.username) {
+            stagedUser = new User(value);
             return await saveUser(stagedUser);
           };
         };
@@ -48,18 +50,21 @@ export default {
         maxAge: 3600000
       });
 
-      res.status(201).json({
+      return res.status(201).json({
         message: "User registered successfully",
         user: {
           _id: user._id,
+          email: user.email,
+          admin: user.admin,
           username: user.username,
-          email: user.email
+          created: user.created,
+          updated: user.updated
         },
         token
       });
     }
     catch (e) {
-      res.status(500).json({ message: "Internal Server Error" });
+      return res.status(500).json({ message: "Internal Server Error" });
     };
   },
 
@@ -89,9 +94,9 @@ export default {
         message: "Signed in successfully",
         user: {
           _id: user._id,
-          name: user.name,
           email: user.email,
           admin: user.admin,
+          username: user.username,
           created: user.created,
           updated: user.updated
         },

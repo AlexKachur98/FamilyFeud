@@ -13,15 +13,9 @@ export const apiFetch = async (endpoint, options = {}) => {
     }
   });
 
-  // interferes with controllers.
-  // if (!res.ok) {
-  //   const errorText = await res.text();
-  //   throw new Error(`Fetch error: ${res.status} ${errorText}`);
-  // };
   return res;
 };
 
-//auth
 export const auth = {
 
   validate: () => apiFetch('/auth/validate', { method: 'GET' }),
@@ -32,10 +26,10 @@ export const auth = {
       body: JSON.stringify({ email, password })
     }),
 
-  signup: (name, email, password) =>
+  signup: (username, email, password) =>
     apiFetch('/auth/signup', {
       method: 'POST',
-      body: JSON.stringify({ name, email, password })
+      body: JSON.stringify({ username, email, password })
     }),
 
   signout: () => apiFetch('/auth/signout', { method: 'GET' })

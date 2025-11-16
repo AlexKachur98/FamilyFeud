@@ -31,7 +31,7 @@ export default function GameBoard() {
     return [
       {
         ...PLAYER_PLACEHOLDERS[0],
-        playerName: user.name || PLAYER_PLACEHOLDERS[0].playerName,
+        playerName: user.username || PLAYER_PLACEHOLDERS[0].playerName,
         avatar: PLAYER_PLACEHOLDERS[0].avatar,
       },
       ...PLAYER_PLACEHOLDERS.slice(1),

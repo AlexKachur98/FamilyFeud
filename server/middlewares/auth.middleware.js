@@ -1,8 +1,8 @@
 
 import jwt from 'jsonwebtoken';
+import User from '../models/user.model.js';
 
-
-const requireSignin = (req, res, next) => {
+const requireSignin = async (req, res, next) => {
 
   let token;
   const authheader = req.headers.authorization;
@@ -16,8 +16,14 @@ const requireSignin = (req, res, next) => {
   if (!token) return res.json({ valid: false, user: null });
 
   try {
-    const decode = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decode;
+    const
+      decode = jwt.verify(token, process.env.JWT_SECRET),
+      user = await User.findById(decode._id).select('-password');
+
+    if (!user) return res.json({ valid: false, user: null });
+
+    req.auth = decode;
+    req.user = user;
     next();
   }
   catch (_) {
@@ -26,8 +32,8 @@ const requireSignin = (req, res, next) => {
 };
 
 const hasAuthorization = (req, res, next) => {
-  const authorized = req.params && req.user && (
-    req.params.id == req.user._id ||
+  const authorized = req.params && req.auth && (
+    req.params.id === req.auth._id.toString() ||
     req.user.admin
   );
 

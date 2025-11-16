@@ -9,21 +9,10 @@ import { useNavigate } from 'react-router-dom';
 import PageSection from '../components/PageSection.jsx';
 import { useAuth } from '../components/auth/AuthContext.js';
 
-const INITIAL_FORM = {
-  name: '',
-  email: '',
-  password: '',
-  confirmPassword: ''
-  // role: 'host'
-};
 
 export default function SignUp() {
   const { signUp } = useAuth();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: ''
-  });
+  const [formData, setFormData] = useState({ username: '', email: '', password: '', confirmPassword: '' });
   const [status, setStatus] = useState({ state: 'idle', message: '' });
   const navigate = useNavigate();
 
@@ -42,11 +31,7 @@ export default function SignUp() {
     setStatus({ state: 'loading', message: 'Submitting access request…' });
 
     try {
-      const { success, message } = await signUp({
-        name: formData.username,
-        email: formData.email,
-        password: formData.password
-      });
+      const { success, message } = await signUp(formData.username, formData.email, formData.password);
 
       if (!success) {
         throw new Error(message || 'Registration failed');
