@@ -22,6 +22,7 @@ import {
   QUESTION_CARD_ASSET,
   TIMER_CARD_ASSET,
 } from '../gameplay/gameBoardConstants.js';
+import AdminDrawer from '../components/AdminDrawer.jsx';
 
 
 export default function GameBoard() {
@@ -96,20 +97,12 @@ export default function GameBoard() {
 
   return (
     <div className="landing-basic game-board">
-      <header className="landing-basic__chrome">
-        <button
-          type="button"
-          className="landing-basic__menu"
-          aria-label="Open navigation"
-          aria-controls="gameboard-drawer"
-          aria-expanded={menuOpen}
-          onClick={toggleMenu}
-        >
-          <span />
-          <span />
-          <span />
-        </button>
-      </header>
+      <header className="landing-basic__chrome" />
+      <AdminDrawer
+        open={menuOpen}
+        onToggle={toggleMenu}
+        links={PRIMARY_NAV_LINKS}
+      />
 
       <main className="landing-basic__body game-board__body">
         <div className="game-board__stage">
@@ -323,27 +316,6 @@ export default function GameBoard() {
         </div>
       </main>
 
-      {menuOpen ? (
-        <button type="button" className="landing-basic__backdrop" aria-label="Close menu" onClick={closeMenu} />
-      ) : null}
-      <nav
-        id="gameboard-drawer"
-        className={`landing-basic__drawer${menuOpen ? ' landing-basic__drawer--open' : ''}`}
-        inert={!menuOpen}
-      >
-        <button type="button" className="landing-basic__drawer-close" onClick={closeMenu} aria-label="Close menu">
-          ×
-        </button>
-        <ul className="landing-basic__drawer-list">
-          {PRIMARY_NAV_LINKS.map((link) => (
-            <li key={link.path}>
-              <Link to={link.path} onClick={closeMenu}>
-                {link.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
     </div>
   );
 };
