@@ -10,7 +10,9 @@ const questionSchema = z.object({
     points: z.number().int().default(null).nullable()
 });
 
-const ai = new GoogleGenAI({});
+const ai = new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY
+});
 
 const getAiResponse = async (req, res) => {
     try {
@@ -44,12 +46,22 @@ const getAiResponse = async (req, res) => {
             contents: content
         });
 
-        const result = questionSchema.parse(JSON.parse(response.text));
-        
-        res.status(200).json(result);
+        let parsed;
+        try {
+            parsed = JSON.parse(response?.text ?? '{}');
+        }
+        catch (parseError) {
+            console.error('Gemini response parse failed', { parseError, raw: response?.text });
+            return res.status(502).json({ message: 'AI response could not be parsed' });
+        }
+
+        const result = questionSchema.parse(parsed);
+
+        return res.status(200).json(result);
     } catch (error) {
         if (error instanceof z.ZodError) return res.status(400).json({ message: 'Invalid AI response format' });
-        res.status(500).json({ message: error.message });
+        console.error('Gemini request failed', error);
+        return res.status(500).json({ message: error.message || 'AI request failed' });
     }
 };
 

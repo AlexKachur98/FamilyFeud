@@ -1,5 +1,4 @@
 import QuestionSetModel from '../models/questionSet.model.js';
-import QuestionModel from '../models/question.model.js';
 
 // Get all question sets (with populated questions)
 export const getAllQuestionSets = async (req, res) => {
@@ -52,18 +51,19 @@ export const createQuestionSet = async (req, res) => {
 // Update a question set
 export const updateQuestionSet = async (req, res) => {
   try {
-    const { title, description, roundType, tags, questionIds } = req.body;
+    const { title, category, prompt, roundType, tags, answers } = req.body;
 
-    // Validate that all question IDs exist
-    if (questionIds && questionIds.length > 0) {
-      const questionsExist = await QuestionModel.countDocuments({
-        _id: { $in: questionIds }
-      });
-
-      if (questionsExist !== questionIds.length) {
-        return res.status(400).json({ message: 'One or more questions do not exist' });
-      }
-    }
+    const normalizedAnswers = Array.isArray(answers)
+      ? answers
+        .filter((entry) => entry && entry.answer)
+        .map((entry) => ({
+          answer: entry.answer,
+          points: Number(entry.points) || 0,
+          aliases: Array.isArray(entry.aliases)
+            ? entry.aliases.filter(Boolean).map((alias) => alias.trim())
+            : []
+        }))
+      : undefined;
 
     const updatedSet = await QuestionSetModel.findByIdAndUpdate(
       req.params.id,
@@ -72,12 +72,12 @@ export const updateQuestionSet = async (req, res) => {
         category,
         prompt,
         roundType,
-        tags: tags || [],
-        answers: questionIds || [],
+        tags: Array.isArray(tags) ? tags : [],
+        ...(normalizedAnswers ? { answers: normalizedAnswers } : {}),
         updatedAt: new Date()
       },
-      { new: true }
-    ).populate('answers');
+      { new: true, runValidators: true }
+    );
 
     if (!updatedSet) {
       return res.status(404).json({ message: 'Question set not found' });
@@ -90,15 +90,13 @@ export const updateQuestionSet = async (req, res) => {
   }
 };
 
-// Add a question to a set
+// Add a question (answer entry) to a set
 export const addQuestionToSet = async (req, res) => {
   try {
-    const { questionId } = req.body;
+    const { answer, points, aliases } = req.body;
 
-    // Check if the question exists
-    const question = await QuestionModel.findById(questionId);
-    if (!question) {
-      return res.status(404).json({ message: 'Question not found' });
+    if (!answer || points === undefined || points === null) {
+      return res.status(400).json({ message: 'Answer text and points are required' });
     }
 
     const questionSet = await QuestionSetModel.findById(req.params.id);
@@ -106,14 +104,16 @@ export const addQuestionToSet = async (req, res) => {
       return res.status(404).json({ message: 'Question set not found' });
     }
 
-    // Avoid duplicate questions
-    if (!questionSet.questions.includes(questionId)) {
-      questionSet.questions.push(questionId);
-      questionSet.updatedAt = new Date();
-      await questionSet.save();
-    }
+    questionSet.answers.push({
+      answer,
+      points: Number(points) || 0,
+      aliases: Array.isArray(aliases)
+        ? aliases.filter(Boolean).map((alias) => alias.trim())
+        : []
+    });
+    questionSet.updatedAt = new Date();
+    await questionSet.save();
 
-    // Return the updated set with populated questions
     const updatedSet = await QuestionSetModel.findById(req.params.id);
     res.status(200).json(updatedSet);
   } catch (error) {
@@ -122,24 +122,26 @@ export const addQuestionToSet = async (req, res) => {
   }
 };
 
-// Remove a question from a set
+// Remove a question (answer entry) from a set
 export const removeQuestionFromSet = async (req, res) => {
   try {
-    const { questionId } = req.body;
+    const { answerId } = req.body;
+
+    if (!answerId) {
+      return res.status(400).json({ message: 'Answer ID is required' });
+    }
 
     const questionSet = await QuestionSetModel.findById(req.params.id);
     if (!questionSet) {
       return res.status(404).json({ message: 'Question set not found' });
     }
 
-    // Remove the question if it exists in the set
-    questionSet.questions = questionSet.questions.filter(
-      id => id.toString() !== questionId
+    questionSet.answers = questionSet.answers.filter(
+      (entry) => entry?._id?.toString() !== answerId
     );
     questionSet.updatedAt = new Date();
     await questionSet.save();
 
-    // Return the updated set with populated questions
     const updatedSet = await QuestionSetModel.findById(req.params.id);
     res.status(200).json(updatedSet);
   } catch (error) {

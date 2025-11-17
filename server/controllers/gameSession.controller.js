@@ -2,6 +2,11 @@ import ActiveSessionModel from '../models/activeSession.model.js';
 import QuestionModel from '../models/question.model.js';
 import { ROUND_BUCKETS } from './question.controller.js';
 
+const findTeamById = (session, teamId) =>
+  session?.teams?.find((team) =>
+    team?._id?.toString() === teamId || team?.id === teamId
+  );
+
 // Create a new game session
 export const createGameSession = async (req, res) => {
   try {
@@ -98,7 +103,7 @@ export const updateTeam = async (req, res) => {
     const session = await ActiveSessionModel.findOne({ id });
     if (!session) return res.status(404).json({ message: 'Session not found' });
 
-    const team = session.teams.id(teamId);
+    const team = findTeamById(session, teamId);
     if (!team) return res.status(404).json({ message: 'Team not found' });
 
     if (score !== undefined) team.score = score;
@@ -150,7 +155,7 @@ export const addStrike = async (req, res) => {
     const session = await ActiveSessionModel.findOne({ id });
     if (!session) return res.status(404).json({ message: 'Session not found' });
 
-    const team = session.teams.id(teamId);
+    const team = findTeamById(session, teamId);
     if (!team) return res.status(404).json({ message: 'Team not found' });
 
     team.strikes += 1;
@@ -171,7 +176,7 @@ export const awardPoints = async (req, res) => {
     const session = await ActiveSessionModel.findOne({ id });
     if (!session) return res.status(404).json({ message: 'Session not found' });
 
-    const team = session.teams.id(teamId);
+    const team = findTeamById(session, teamId);
     if (!team) return res.status(404).json({ message: 'Team not found' });
 
     team.score += points;
