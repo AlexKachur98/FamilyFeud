@@ -13,21 +13,21 @@ const requireSignin = async (req, res, next) => {
   else if (req.cookies.t)
     token = req.cookies.t;
 
-  if (!token) return res.json({ valid: false, user: null });
+  if (!token) return res.status(401).json({ valid: false, user: null });
 
   try {
     const
       decode = jwt.verify(token, process.env.JWT_SECRET),
       user = await User.findById(decode._id).select('-password');
 
-    if (!user) return res.json({ valid: false, user: null });
+    if (!user) return res.status(401).json({ valid: false, user: null });
 
     req.auth = decode;
     req.user = user;
     next();
   }
   catch (_) {
-    return res.json({ valid: false, user: null });
+    return res.status(401).json({ valid: false, user: null });
   };
 };
 
