@@ -25,6 +25,14 @@ _Formerly “Front-End Skeleton Build Log” — now tracks ongoing client-side 
 3. **12:00** — Audited secrets/auth handling: verified `.env` ignore rules, documented credential rotation, and filed fixes for cookie naming + async password checks.
 4. **13:15** — Updated README/documentation to reflect live backend integration, Atlas query instructions, and outstanding API work.
 
+## Timeline – November 17, 2025
+1. **13:07** — Added profile fields (display name, avatar, country/bio) and avatar upload endpoint; wired client to show defaults and sign-up redirect to profile.
+2. **13:31** — Simplified auth/nav: protected routes, hidden nav for signed-out users, “Play” goes to Dashboard, removed SignedOut page.
+3. **13:52** — Extracted reusable hamburger/drawer component and floated admin drawer; added view-as-user toggle for admins.
+4. **14:11** — Dashboard now pulls live question stats, separates Content Overview loading, and shows ERROR on fetch failures; Active Sessions placed above Question Sets.
+5. **14:25** — Added session creation flow with default timers/settings, owner-scoped question sets (`/question-sets/mine`), removed Sessions page, unified button styling.
+
+
 ## Verification Steps
 - Run `npm install` at repo root to ensure workspace deps restore for both workspaces.
 - Provide a populated `.env` (see README sample) with MongoDB + Gemini keys before booting.

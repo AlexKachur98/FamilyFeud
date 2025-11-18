@@ -1,7 +1,7 @@
 # Family Feud – Front-End Skeleton
 
 ## Overview
-React + Vite SPA that powers the host dashboard, question management, session control, contestant join, and full-screen game board experiences for the Family Feud project. The client now wires directly to the Express API for authentication, random question pulls, and AI-powered answer validation while placeholder utilities continue to unblock dashboard/session scaffolding.
+React + Vite SPA that powers the dashboard, question management, session creation, and full-screen game board experiences for the Family Feud project. The client wires directly to the Express API for authentication, random question pulls, AI-powered answer validation, and owner-scoped question sets.
 
 ## Tech Stack
 - React 19 with Vite 7
@@ -21,23 +21,21 @@ npm run build --prefix client   # production build
 client/
   src/
     components/      # Shared UI primitives (Layout, PageSection)
-    pages/           # Route-aligned views (dashboard, sessions, auth, etc.)
+    pages/           # Route-aligned views (dashboard, question sets, auth, etc.)
     gameplay/        # Game board engine, constants, and helpers
-    utils/           # API client + placeholder data scaffolding for dashboard/session shells
+    utils/           # API client + helpers
     styles/          # Baseline, un-themed CSS tokens
 ```
 
 ## Current Status
-- Host dashboard still surfaces placeholder metrics via `questionSets.js` and `gameSessions.js`.
-- Question set CRUD form and list remain static shells with inline `TODO (Backend Team)` annotations.
-- Sessions view outlines live controls and utility actions awaiting API hooks.
-- Player join screen delivers access code form plus buzzer button ready for WebSocket wiring.
+- Dashboard shows live stats (question sets, questions) and active sessions; session creation is available to all signed-in users via `/session-create`.
+- Question sets are owner-scoped and fetched via `/api/v1/question-sets/mine`.
+- Sessions page was removed; session creation and overview live on the dashboard.
 - Auth views call `/api/v1/auth/*` endpoints (signin/signup/signout/validate) to manage JWT cookie state via `AuthProvider`.
 - Home landing + game board share a slide-out drawer; global header hides on `/` for hero focus.
-- `/game-board` is now fully data-driven: it fetches random rounds via `/api/v1/question`, hydrates the eight-slot grid, submits guesses to `/api/v1/ai/:questionId`, and uses `useGameBoardEngine` for timers/buzz/strike logic. Placeholder avatars/team labels remain until lobby wiring lands.
-- Placeholder routes are available:
-  - `/under-construction` for unfinished flows and buttons
-  - `/signed-out` confirmation after sign‑out
+- `/game-board` is fully data-driven: it fetches random rounds via `/api/v1/question`, submits guesses to `/api/v1/ai/:questionId`, and uses `useGameBoardEngine` for timers/buzz/strike logic.
+- Placeholder routes:
+  - `/under-construction` for unfinished flows/actions
   - `*` → 404 Not Found page
 
 ### Dev Proxy
@@ -51,8 +49,7 @@ client/
 2. Fix auth edge cases (await password comparison, align cookie names) and add better error messaging in the client once backend patch lands.
 3. Layer in real-time communication (Socket.IO or native WebSocket) for buzzer + host controls.
 4. Apply design system styling and responsive refinements after functionality stabilizes (PPT assets establish current layout ratios).
-5. Replace the temporary landing drawer with a shared, auth‑aware global nav and surface role-based routes after sign-in.
-6. Replace placeholder routes (UnderConstruction/SignedOut) with final implementations as endpoints and flows land.
+5. Replace placeholder routes (UnderConstruction) with final implementations as endpoints and flows land.
 
 ## Branch & PR Workflow
 - Use feature branches per change (e.g., `feature/front-end-skeleton`).

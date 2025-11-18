@@ -1,9 +1,3 @@
-/**
- * @file question.controller.js
- * @author Alex Kachur
- * @since 2025-11-15
- * @purpose CRUD and random question selection handlers.
- */
 import QuestionModel from '../models/question.model.js';
 
 const getAllQuestions = async (req, res) => {
