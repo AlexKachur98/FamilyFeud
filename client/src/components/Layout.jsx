@@ -112,6 +112,8 @@ export default function Layout() {
             })),
             { path: '/question-sets', label: 'Question Sets' },
             { path: '/session-create', label: 'Create Session' },
+            { path: '/signin', label: 'Sign In' },
+            { path: '/signup', label: 'Register' },
             { path: '#toggle-view', label: viewAsUser ? 'View as Admin' : 'View as User' }
           ]}
         />
