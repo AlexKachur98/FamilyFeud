@@ -18,6 +18,7 @@ const QuestionSetSchema = new mongoose.Schema({
       aliases: [{ type: String, trim: true }],
     },
   ],
+  owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
