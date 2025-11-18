@@ -13,7 +13,7 @@ export default function initWebsocket(listeningPort) {
 
     const ioCorsOptions = {
         cors: {
-            origin: [process.env.CLIENT_URL, 'http://localhost:5173'],
+            origin: [process.env.CLIENT_URL, 'http://localhost:5173', 'https://admin.socket.io'],
         }
     };
 
