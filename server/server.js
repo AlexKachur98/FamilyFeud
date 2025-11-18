@@ -1,6 +1,5 @@
 import 'dotenv/config';
 
-import path from 'node:path';
 import express from "express";
 import config from "./config/config.js";
 import mongoose from "mongoose";
@@ -12,6 +11,7 @@ import helmet from "helmet";
 
 import rateLimit from './middlewares/rateLimiter.js'
 import apiRouter from './api-router.js';
+import initWebsocket from './sockets/websocket.js';
 
 try {
   try {
@@ -51,11 +51,13 @@ app
   .get(/^(?!\/api).*/, rateLimit, (_, res) => {
     res.json({ message: "Welcome to Family Feud!" });
     // res.sendFile(path.join(process.cwd(), 'client/dist', 'index.html'));
-  })
-
-  .listen(config.port, (err) => {
-    if (err) console.error(`Error starting server: ${err}`);
-    config.env === 'development'
-      ? console.log(`Server running on http://localhost:${config.port}/`)
-      : console.log(`Server running on https://dailygrind-server.onrender.com`);
   });
+
+const listeningPort = app.listen(config.port, (err) => {
+  if (err) console.error(`Error starting server: ${err}`);
+  config.env === 'development'
+    ? console.log(`Server running on http://localhost:${config.port}/`)
+    : console.log(`Server running on https://dailygrind-server.onrender.com`);
+});
+
+initWebsocket(listeningPort);

@@ -4,9 +4,10 @@
  * @since 2025-11-11
  * @purpose Interactive Family Feud board prototype that now delegates game logic to the gameplay engine.
  */
-
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+
+import { io } from 'socket.io-client';
 
 import { useAuth } from '../components/auth/AuthContext.js';
 import useGameBoardEngine from '../gameplay/useGameBoardEngine.js';
@@ -23,12 +24,39 @@ import {
   TIMER_CARD_ASSET,
 } from '../gameplay/gameBoardConstants.js';
 
+const SERVER_URL = import.meta.env.PROD ? (import.meta.env.VITE_SERVER_URL || '') : (import.meta.env.VITE_LOCAL_URL || '');
+
 
 export default function GameBoard() {
+
+  const { user } = useAuth();
+
   const [menuOpen, setMenuOpen] = useState(false);
   const toggleMenu = () => setMenuOpen((value) => !value);
   const closeMenu = () => setMenuOpen(false);
-  const { user } = useAuth();
+
+  // WebSocket instance
+  // TODO: 
+  const roomId = "demo-room-id"; // Replace with actual room ID
+
+  const [connectedUsers, setConnectedUsers] = useState({});
+
+  let websocket;
+
+  useEffect(() => {
+    websocket = io(SERVER_URL);
+
+    websocket.on('connect', () => {
+      console.log('Connected to WebSocket server with ID:', websocket.id);
+    });
+
+    if (user) websocket.emit('joinRoom', roomId, user, (res, resUser) => {
+      console.log(res);
+      setConnectedUsers((prevUsers) => ({...prevUsers, [resUser._id]: resUser}));
+    });
+  }, []);
+  
+  // Above is for Websocket testing purposes only.
 
   const players = useMemo(() => {
     if (!user) return PLAYER_PLACEHOLDERS;
@@ -112,6 +140,17 @@ export default function GameBoard() {
       </header>
 
       <main className="landing-basic__body game-board__body">
+
+        {/* This is for websocket testing purposes only. */}
+        <div style={{ backgroundColor: 'black', padding: '15px', color: 'white', position: 'absolute', top: '10px', right: '10px', zIndex: 1000, fontSize: '12px' }}>
+          <h2>Connected Users</h2>
+          <ul>
+            {Object.values(connectedUsers).map((connUser) => (
+              <li key={connUser._id}>{connUser.username} (ID: {connUser._id})</li>
+            ))}
+          </ul>
+        </div>
+
         <div className="game-board__stage">
           <img
             src="/Gameboard_Backround.jpg"
