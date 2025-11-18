@@ -2,7 +2,7 @@
 
 ### Project Overview
 
-Family Feud is a full-stack recreation of the survey-style game show built as a mono-repo: a React SPA hosts the entire producer/host interface while an Express + MongoDB API powers authentication, question storage, AI-based answer validation, and future session management. Two teams compete to guess the most popular survey answers, earn points, and advance through rounds until a winning team is declared. The project emphasizes responsive host tooling, low-latency gameplay, and clear integration touchpoints for extending the experience (sessions, lobby management, real-time sockets).
+Family Feud is a full-stack recreation of the survey-style game show built as a mono-repo: a React SPA hosts the entire producer/host interface while an Express + MongoDB API powers authentication, question storage, AI-based answer validation, and session management. Two teams compete to guess the most popular survey answers, earn points, and advance through rounds until a winning team is declared. The project emphasizes responsive host tooling, low-latency gameplay, and clear integration touchpoints for extending the experience (sessions, lobby management, real-time sockets).
 
 ### Key Features
 
@@ -11,7 +11,7 @@ Family Feud is a full-stack recreation of the survey-style game show built as a 
 - **Gameplay engine:** React hook (`useGameBoardEngine`) orchestrates round intros, spacebar buzz, timers, strikes, steals, scoring, and scoreboard persistence for eight-card layouts.
 - **AI-assisted validation:** `/api/v1/ai/:questionId` proxies to Google Gemini 2.5 Flash Lite with Zod schema enforcement to leniently match misspelled answers while guarding responses.
 - **Authentication:** JWT-based sign-up/in/out flows with HttpOnly cookies, bcrypt-hashed passwords, and middleware for route protection.
-- **Host tooling:** Dashboard, question set scaffolding, session management shells, player join and leaderboard pages with shared layout + navigation metadata.
+- **Host tooling:** Dashboard, question set management (owner-scoped), session creation, and leaderboard pages with shared layout + navigation metadata.
 - **Security & ops:** Express rate limiting, helmet/cors/compression, `.env` management, and documentation covering secrets hygiene and API expectations.
 
 ### Tech Stack
@@ -53,6 +53,10 @@ Family Feud is a full-stack recreation of the survey-style game show built as a 
 | `/api/v1/question` | GET | Returns randomized question ID + metadata with optional `minAnswers`, `maxAnswers`, or `round` query params |
 | `/api/v1/question/:id` | GET | Fetches a specific question/answers |
 | `/api/v1/ai/:questionId` | POST | Sends `{ userAnswer }` for AI validation; response includes `{ index, answer, points }` |
+| `/api/v1/question-sets` | GET | Lists all question sets (admin/host use) |
+| `/api/v1/question-sets/mine` | GET | Lists question sets owned by the authenticated user |
+| `/api/v1/question-sets` | POST | Creates a question set owned by the authenticated user |
+| `/api/v1/gamesession` | POST | Creates a session (id/accessCode/questionSetId/teams) |
 
 > **Note:** Additional CRUD endpoints for question sets/sessions remain TODO (see `docs/backend-handoff.md`).
 
@@ -61,8 +65,7 @@ Family Feud is a full-stack recreation of the survey-style game show built as a 
 - Route: `/game-board`
 - Round intro splash uses asset-specific overlays (`public/Round_One.png`, `Round_Two.png`, etc.).
 - Press **Space** to buzz in; the input unlocks only for the active player during their timer window.
-- Five-second answer timer, strikes, and steal flow all run client-side so latency is minimal.
-- Placeholder round data lives inline in `client/src/pages/GameBoard.jsx` until the question bank JSON/API is wired in.
+- Timers, strikes, and steal flow run client-side so latency is minimal; questions and AI validation are live.
 
 ### Contributing
 
@@ -90,7 +93,8 @@ Family Feud is a full-stack recreation of the survey-style game show built as a 
 ### Dev Proxy
 - Vite development server proxies `/api/*` and `/auth/*` to the Express backend on `http://localhost:3000` so sign‑in/sign‑up work locally with cookies.
 
-### Placeholder Routes
+### Routes of Note
+- `/session-create` for creating sessions (CTA on Dashboard)
+- `/question-sets` for creating/viewing your sets (Dashboard CTA)
 - `/under-construction` indicates incomplete flows/actions.
-- `/signed-out` confirms sign‑out.
 - Unknown routes render a friendly 404 page.

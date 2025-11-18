@@ -292,6 +292,17 @@ button:focus-visible {
   gap: 1rem;
 }
 
+.form-grid--two {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.form-grid--two.is-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .form-grid--vertical {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
@@ -462,8 +473,8 @@ button:focus-visible {
   width: 44px;
   height: 44px;
   border: none;
-  background: rgba(255, 255, 255, 0.15); /* CHANGED: from transparent to visible (for accessiblity) Completed: by Kelly Burden - Nov 2025 */
-  border: 2px solid rgba(255, 255, 255, 0.3); /* CHANGED: from none to visible (for accessiblity) */
+  background: rgba(245, 158, 11, 0.2); /* show-brand orange tint */
+  border: 2px solid rgba(245, 158, 11, 0.5);
   border-radius: 8px;
   display: grid;
   gap: 6px;
@@ -473,19 +484,19 @@ button:focus-visible {
 }
 
 .landing-basic__menu:hover {
-  background: rgba(255, 255, 255, 0.25); /* ADD: hover effect for better UX */
-  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(245, 158, 11, 0.35);
+  border-color: rgba(245, 158, 11, 0.8);
 }
 
 .landing-basic__menu span {
   display: block;
   height: 4px;
   border-radius: 2px;
-  background: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  background: #f59e0b; /* show-brand orange */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 .landing-basic__menu:hover span {
-  background: #93c5fd;
+  background: #fbbf24;
 }
 
 .landing-basic__body {
@@ -1245,18 +1256,24 @@ button:focus-visible {
   color: #666;
 }
 
-.primary-button {
-  background: #4CAF50;
-  color: white;
+.secondary-button {
+  background: #2563eb;
+  color: #fff;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
   cursor: pointer;
   margin-top: 1rem;
+  transition: background 0.2s ease, transform 0.1s ease;
 }
 
-.primary-button:hover {
-  background: #45a049;
+.secondary-button:hover {
+  background: #1d4ed8;
+}
+
+.secondary-button.is-active {
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
+  transform: translateY(-1px);
 }
 
 

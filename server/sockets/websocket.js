@@ -20,11 +20,19 @@ export default function initWebsocket(listeningPort) {
     // Attach WebSocket server
     io.attach(listeningPort, ioCorsOptions);
 
-    instrument(io, {
-        auth: {
-            type: "basic",
-            username: process.env.ADMIN_SOCKET_UI_USERNAME,
-            password: process.env.ADMIN_SOCKET_UI_PASSWORD,
-        }
-    });
+    const adminUiPassword = process.env.ADMIN_SOCKET_UI_PASSWORD;
+    const adminUiUsername = process.env.ADMIN_SOCKET_UI_USERNAME;
+
+    // Only enable the admin UI if a valid bcrypt hash is provided to avoid runtime crashes.
+    if (adminUiPassword && adminUiPassword.startsWith("$2")) {
+        instrument(io, {
+            auth: {
+                type: "basic",
+                username: adminUiUsername,
+                password: adminUiPassword,
+            }
+        });
+    } else {
+        console.warn("Socket.io admin UI disabled: ADMIN_SOCKET_UI_PASSWORD must be a bcrypt hash.");
+    }
 }

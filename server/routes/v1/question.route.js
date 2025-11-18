@@ -6,6 +6,7 @@ import questionController from '../../controllers/question.controller.js';
 const router = express.Router();
 
 // Protected routes
+router.get('/all', questionController.getAllQuestions);
 router.get('/', questionController.getRandomQuestion);
 router.get('/:id', questionController.getQuestion);
 router.post('/', questionController.createQuestion);

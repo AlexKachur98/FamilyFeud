@@ -20,7 +20,7 @@ export default function QuestionSets() {
   useEffect(() => {
     const fetchQuestionSets = async () => {
       try {
-        const response = await apiFetch('/question-sets', {
+        const response = await apiFetch('/question-sets/mine', {
           credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
         });
@@ -117,8 +117,8 @@ export default function QuestionSets() {
     <div className="page page--stacked">
       <header className="page__header">
         <p className="eyebrow">Survey Bank</p>
-        <h2>Question Sets</h2>
-        <p>Curate survey prompts and answer lists for upcoming episodes.</p>
+        <h2>Create Custom Question Sets</h2>
+        <p>Build and save your own Family Feud-style surveys with prompts, answers, and point values.</p>
       </header>
 
       {error && (
@@ -130,7 +130,7 @@ export default function QuestionSets() {
 
       <PageSection
         title="Create Question Set"
-        description="Add a new survey prompt, answers, and optional tags."
+        description="Add a prompt, round type, and answers to publish a custom set hosts can play."
       >
         <form
           className="form-grid form-grid--vertical"
@@ -200,7 +200,7 @@ export default function QuestionSets() {
             >
               Add Another Answer
             </button>
-            <button type="submit" className="primary-button">
+            <button type="submit" className="secondary-button">
               Save Question Set
             </button>
           </div>

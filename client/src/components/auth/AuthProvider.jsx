@@ -7,7 +7,9 @@ import { auth } from '../../utils/api';
 export default function AuthProvider({ children }) {
   const
     [isLoggedIn, setIsLoggedIn] = useState(false),
-    [user, setUser] = useState(null);
+    [user, setUser] = useState(null),
+    [isAuthLoading, setIsAuthLoading] = useState(true),
+    [viewAsUser, setViewAsUser] = useState(false);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -23,7 +25,9 @@ export default function AuthProvider({ children }) {
         // console.error('Session check failed:', e);
         setIsLoggedIn(false);
         setUser(null);
-      };
+      } finally {
+        setIsAuthLoading(false);
+      }
     };
     checkSession();
   }, []);
@@ -38,6 +42,7 @@ export default function AuthProvider({ children }) {
 
       setIsLoggedIn(true);
       setUser(data.user);
+      setIsAuthLoading(false);
 
       return { success: true };
     }
@@ -59,6 +64,7 @@ export default function AuthProvider({ children }) {
       const data = await res.json();
       setIsLoggedIn(true);
       setUser(data.user);
+      setIsAuthLoading(false);
 
       return { success: true };
     }
@@ -73,6 +79,7 @@ export default function AuthProvider({ children }) {
 
       setIsLoggedIn(false);
       setUser(null);
+      setIsAuthLoading(false);
       return { success: true };
     }
     catch (e) {
@@ -81,8 +88,22 @@ export default function AuthProvider({ children }) {
     };
   };
 
+  const isActualAdmin = Boolean(user?.admin);
+  const isAdmin = isActualAdmin && !viewAsUser;
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{
+      isLoggedIn,
+      user,
+      isAdmin,
+      isActualAdmin,
+      viewAsUser,
+      setViewAsUser,
+      isAuthLoading,
+      signIn,
+      signUp,
+      signOut
+    }}>
       {children}
     </AuthContext.Provider>
   );

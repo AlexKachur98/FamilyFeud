@@ -1,6 +1,7 @@
 import 'dotenv/config';
 
 import express from "express";
+import path from "path";
 import config from "./config/config.js";
 import mongoose from "mongoose";
 
@@ -40,6 +41,7 @@ app
   .use(express.json())
   .use(express.urlencoded({ extended: true }))
   .use(helmet())
+  .use('/uploads', express.static(path.join(process.cwd(), 'uploads')))
 
 apiRouter(app);
 

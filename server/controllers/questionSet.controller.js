@@ -25,6 +25,17 @@ export const getQuestionSet = async (req, res) => {
   }
 };
 
+// Get current user's question sets
+export const getMyQuestionSets = async (req, res) => {
+  try {
+    const sets = await QuestionSetModel.find({ owner: req.auth?._id });
+    res.status(200).json(sets);
+  } catch (error) {
+    console.error('Error fetching my question sets:', error);
+    res.status(500).json({ message: 'Server error while fetching question sets' });
+  }
+};
+
 // Create a new question set
 export const createQuestionSet = async (req, res) => {
   try {
@@ -37,7 +48,8 @@ export const createQuestionSet = async (req, res) => {
       prompt,
       roundType,
       tags: tags || [],
-      answers: answers || []
+      answers: answers || [],
+      owner: req.auth?._id
     });
 
     await questionSet.save();
