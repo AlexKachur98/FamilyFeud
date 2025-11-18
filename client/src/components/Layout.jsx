@@ -16,7 +16,7 @@ export default function Layout() {
   const [status, setStatus] = useState({ state: 'idle', message: '' });
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const { signOut, user, isLoggedIn, isAdmin, isActualAdmin, viewAsUser, setViewAsUser } = useAuth();
+  const { signOut, isLoggedIn, isAdmin, isActualAdmin, viewAsUser, setViewAsUser } = useAuth();
 
   // Shared nav for all users.
   const navItems = [HOME_NAV_ITEM, ...NAV_ITEMS];

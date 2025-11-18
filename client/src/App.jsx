@@ -12,7 +12,6 @@ import Layout from './components/Layout.jsx';
 
 import SignIn from './pages/SignIn.jsx';
 import SignUp from './pages/SignUp.jsx';
-import SignedOut from './pages/SignedOut.jsx';
 
 import Home from './pages/Home.jsx';
 import Dashboard from './pages/Dashboard.jsx';
@@ -42,7 +41,6 @@ export default function App() {
             <Route path="signin" element={<SignIn />} />
             <Route path="signup" element={<SignUp />} />
             <Route path="under-construction" element={<UnderConstruction />} />
-            <Route path="signed-out" element={<SignedOut />} />
             <Route path="profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Route>
