@@ -19,6 +19,7 @@ import QuestionSets from './pages/QuestionSets.jsx';
 import SessionCreate from './pages/SessionCreate.jsx';
 import Leaderboard from './pages/Leaderboard.jsx';
 import GameBoard from './pages/GameBoard.jsx';
+import Lobby from './pages/Lobby.jsx';
 import UserProfile from './pages/UserProfile.jsx';
 
 import NotFound from './pages/NotFound.jsx';
@@ -36,6 +37,7 @@ export default function App() {
             <Route path="dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="question-sets" element={<ProtectedRoute><QuestionSets /></ProtectedRoute>} />
             <Route path="/game-board" element={<ProtectedRoute><GameBoard /></ProtectedRoute>} />
+            <Route path="lobby/:sessionId" element={<ProtectedRoute><Lobby /></ProtectedRoute>} />
             <Route path="session-create" element={<ProtectedRoute><SessionCreate /></ProtectedRoute>} />
             <Route path="leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
             <Route path="signin" element={<SignIn />} />

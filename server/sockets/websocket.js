@@ -1,14 +1,17 @@
 import { Server } from "socket.io";
 import { instrument } from "@socket.io/admin-ui";
-import { joinGameSession, leaveGameSession } from "./gameSession.socket.js";
+import { joinGameSession, leaveGameSession, registerHostActions } from "./gameSession.socket.js";
+import { setIo } from './sessionBus.js';
 
 export default function initWebsocket(listeningPort) {
     const io = new Server();
+    setIo(io);
     io.on("connection", (socket) => {
         console.log("User connected to websocket:", socket.id);
 
         joinGameSession( socket );
         leaveGameSession( socket );
+        registerHostActions( socket );
     });
 
     const ioCorsOptions = {

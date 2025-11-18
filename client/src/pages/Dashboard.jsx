@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PageSection from '../components/PageSection.jsx';
 import { apiFetch } from '../utils/api.js';
 import { useAuth } from '../components/auth/AuthContext.js';
+import { useMemo } from 'react';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ export default function Dashboard() {
   });
   const [setsError, setSetsError] = useState(false);
   const [questionsError, setQuestionsError] = useState(false);
+  const [joinError, setJoinError] = useState('');
 
   useEffect(() => {
     const fetchSets = async () => {
@@ -173,7 +175,14 @@ export default function Dashboard() {
       <PageSection
         title="Active Sessions"
         description="Monitor lobbies and live games."
-        actions={<button type="button" onClick={() => navigate('/session-create')}>Create Session</button>}
+        actions={(
+          <>
+            <button type="button" onClick={() => navigate('/session-create')}>Create Session</button>
+            <button type="button" aria-label="Refresh sessions" className="link-button" onClick={() => window.location.reload()}>
+              ⟳
+            </button>
+          </>
+        )}
       >
         {loadingSessions ? (
           <div className="loading-message">Loading sessions…</div>
@@ -183,34 +192,64 @@ export default function Dashboard() {
             <p>Create a new session to start a game.</p>
           </div>
         ) : (
-          <div className="table-placeholder">
-            <div className="table-placeholder__row table-placeholder__row--head">
-              <span>Code</span>
-              <span>Status</span>
-              <span>Question Set</span>
-              <span>Teams</span>
-              <span>Updated</span>
-              <span>Actions</span>
-            </div>
-            {sessions.map((session) => (
-              <div key={session.id} className="table-placeholder__row">
-                <span>{session.accessCode}</span>
-                <span>{session.status}</span>
-                <span>{session.questionSetId || 'None'}</span>
-                <span>{session.teams?.map((team) => team.name).join(' vs ') || 'None'}</span>
-                <span>{session.updatedAt ? new Date(session.updatedAt).toLocaleTimeString() : 'Never'}</span>
-                <span>
-                  <button
-                    type="button"
-                    className="link-button"
-                    onClick={() => navigate(`/sessions/${session.id}`)}
-                  >
-                    Open
-                  </button>
-                </span>
+          <>
+            <div className="table-placeholder">
+              <div className="table-placeholder__row table-placeholder__row--head">
+                <span>Session</span>
+                <span>Status</span>
+                <span>Question Set</span>
+                <span>Teams</span>
+                <span>Updated</span>
+                <span>Actions</span>
               </div>
-            ))}
-          </div>
+              {sessions.map((session) => (
+                <div key={session.id} className="table-placeholder__row">
+                  <span>{session.id}</span>
+                  <span>{session.status}</span>
+                  <span>{session.questionSetId || 'None'}</span>
+                  <span>{session.teams?.map((team) => team.name).join(' vs ') || 'None'}</span>
+                  <span>{session.updatedAt ? new Date(session.updatedAt).toLocaleTimeString() : 'Never'}</span>
+                  <span>
+                    <button
+                      type="button"
+                      className="link-button"
+                      onClick={() => {
+                        if (!session.accessCode) {
+                          setJoinError('');
+                          navigate(`/lobby/${session.id}`);
+                          return;
+                        }
+                        const code = window.prompt('Enter access code to join this session:');
+                        if (!code) return;
+                        if (code.trim() === session.accessCode) {
+                          setJoinError('');
+                          navigate(`/lobby/${session.id}`);
+                        } else {
+                          setJoinError('Invalid access code.');
+                        }
+                      }}
+                    >
+                      Join
+                    </button>
+                    <button
+                      type="button"
+                      className="link-button"
+                      onClick={() => {
+                        if (session.status === 'lobby') {
+                          navigate(`/lobby/${session.id}`);
+                        } else {
+                          navigate(`/game-board?sessionId=${session.id}`);
+                        }
+                      }}
+                    >
+                      Manage
+                    </button>
+                  </span>
+                </div>
+              ))}
+            </div>
+            {joinError ? <p className="form-status form-status--error">{joinError}</p> : null}
+          </>
         )}
       </PageSection>
 

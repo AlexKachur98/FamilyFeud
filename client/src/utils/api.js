@@ -81,5 +81,16 @@ export const sessions = {
     apiFetch('/gamesession', {
       method: 'POST',
       body: JSON.stringify(payload)
+    }),
+  get: (id) => apiFetch(`/gamesession/${id}`, { method: 'GET' }),
+  start: (id, roundType = '1') =>
+    apiFetch(`/gamesession/${id}/start`, {
+      method: 'POST',
+      body: JSON.stringify({ roundType })
+    }),
+  join: (id, payload) =>
+    apiFetch(`/gamesession/${id}/player-join`, {
+      method: 'POST',
+      body: JSON.stringify(payload)
     })
 };
