@@ -39,7 +39,7 @@ export default function GameBoard() {
   // TODO: 
   const roomId = "demo-room-id"; // Replace with actual room ID
 
-  const [connectedUsers, setConnectedUsers] = useState({});
+  const [connectedUsers, setConnectedUsers] = useState([]);
 
   let websocket;
 
@@ -52,10 +52,10 @@ export default function GameBoard() {
 
     if (user) websocket.emit('joinRoom', roomId, user, (res, resUser) => {
       console.log(res);
-      setConnectedUsers((prevUsers) => ({...prevUsers, [resUser._id]: resUser}));
+      setConnectedUsers((prevUsers) => ([...prevUsers, resUser]));
     });
   }, []);
-  
+
   // Above is for Websocket testing purposes only.
 
   const players = useMemo(() => {
@@ -145,7 +145,7 @@ export default function GameBoard() {
         <div style={{ backgroundColor: 'black', padding: '15px', color: 'white', position: 'absolute', top: '10px', right: '10px', zIndex: 1000, fontSize: '12px' }}>
           <h2>Connected Users</h2>
           <ul>
-            {Object.values(connectedUsers).map((connUser) => (
+            {connectedUsers.map((connUser) => (
               <li key={connUser._id}>{connUser.username} (ID: {connUser._id})</li>
             ))}
           </ul>
