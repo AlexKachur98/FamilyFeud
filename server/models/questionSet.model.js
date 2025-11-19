@@ -1,5 +1,6 @@
 // models/questionSet.model.js
 import mongoose from 'mongoose';
+import Question from './question.model.js';
 
 const QuestionSetSchema = new mongoose.Schema({
   title: { type: String, required: true, trim: true },
@@ -11,13 +12,7 @@ const QuestionSetSchema = new mongoose.Schema({
     default: 'single',
   },
   tags: [{ type: String, trim: true }],
-  answers: [
-    {
-      answer: { type: String, required: true, trim: true },
-      points: { type: Number, required: true },
-      aliases: [{ type: String, trim: true }],
-    },
-  ],
+  questions: [ Question.schema ],
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
