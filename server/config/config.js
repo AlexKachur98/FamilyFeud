@@ -17,6 +17,7 @@ const cookieOptions = {
 const userBody = (user) => ({
   _id: user._id,
   email: user.email,
+  image: user.image,
   admin: user.admin,
   username: user.username,
   created: user.created,

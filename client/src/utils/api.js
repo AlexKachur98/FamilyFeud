@@ -6,11 +6,7 @@ export const apiFetch = async (endpoint, options = {}) => {
   const url = `${SERVER_URL}${API_BASE}${endpoint}`;
   const res = await fetch(url, {
     ...options,
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers
-    }
+    credentials: 'include'
   });
 
   return res;
@@ -23,12 +19,14 @@ export const auth = {
   signin: (email, password) =>
     apiFetch('/auth/signin', {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     }),
 
   signup: (username, email, password) =>
     apiFetch('/auth/signup', {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, email, password })
     }),
 

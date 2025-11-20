@@ -65,13 +65,17 @@ export default {
     try {
       const
         { email, password } = req.body,
-        user = await User.findOne({ "email": email });
+        data = await User.findOne({ "email": email });
+        
+      if (!data) return res.status(401).json({ error: "User not found" });
+      if (!await data.comparePassword(password)) return res.status(401).send({ error: "Passwords don't match." });
 
-      if (!user) return res.status(401).json({ error: "User not found" });
-      if (!await user.comparePassword(password)) return res.status(401).send({ error: "Passwords don't match." });
-
-      const token = generateToken(user);
+      const token = generateToken(data);
       res.cookie('t', token, { ...config.cookieOptions });
+
+      let user = data.toObject();
+      // Convert image buffer to base64 string for response
+      if (data?.image) user.image = `data:${data.image.contentType};base64,${data.image.data.toString('base64')}`;
 
       res.status(200).json({
         message: "Signed in successfully",
