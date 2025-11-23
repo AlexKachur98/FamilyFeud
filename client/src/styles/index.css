@@ -401,6 +401,8 @@ button:focus-visible {
 .form-grid__full input,
 .form-grid__full textarea {
   max-width: 100%;
+}
+
 .form-grid input[type="text"],
 .form-grid input[type="number"],
 .form-grid select {
