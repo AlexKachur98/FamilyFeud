@@ -111,3 +111,244 @@
 .game_theme .loading {
   animation: pulse-glow 2s ease-in-out infinite;
 }
+
+/* Sign-in page specific styles */
+
+/* Form container styling */
+.game_theme .page--auth {
+  max-width: 500px;
+  margin: 2rem auto;
+  backdrop-filter: blur(20px);
+}
+
+/* Form structure */
+.game_theme .form-stack {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.game_theme .form-stack label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+  color: #e2e8f0;
+}
+
+/* Input fields - override base styles */
+.game_theme .form-stack input[type="email"],
+.game_theme .form-stack input[type="password"] {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(59, 130, 246, 0.5) !important;
+  color: white !important;
+  backdrop-filter: blur(10px);
+  padding: 12px 16px !important;
+  border-radius: 8px !important;
+}
+
+.game_theme .form-stack input:focus {
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3) !important;
+  outline: none;
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Submit button */
+.game_theme .form-actions button[type="submit"] {
+  background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  border: none !important;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
+  font-weight: 600;
+  width: 100%;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+}
+
+.game_theme .form-actions button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+/* Forgot password link */
+.game_theme .form-actions .link-button {
+  background: transparent !important;
+  color: #93c5fd !important;
+  border: none !important;
+  text-decoration: underline;
+  width: 100%;
+}
+
+/* Status messages */
+.game_theme .form-status {
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.game_theme .form-status--error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
+
+/* Sign-up/Register specific styles */
+
+/* SignUp specific form layout */
+.game_theme .form-grid--vertical {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.game_theme .form-grid--vertical label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+  color: #e2e8f0;
+}
+
+/* Override form-grid inputs for dark theme */
+.game_theme .form-grid input[type="text"],
+.game_theme .form-grid input[type="email"],
+.game_theme .form-grid input[type="password"] {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(59, 130, 246, 0.5) !important;
+  color: white !important;
+  backdrop-filter: blur(10px);
+  padding: 12px 16px !important;
+  border-radius: 8px !important;
+  width: 100% !important;
+  max-width: none !important; /* Remove the 400px constraint */
+}
+
+.game_theme .form-grid input:focus {
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3) !important;
+  outline: none;
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Submit button - same as SignIn */
+.game_theme .form-actions button[type="submit"] {
+  background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  border: none !important;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
+  font-weight: 600;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.game_theme .form-actions button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+/* Password match validation visual feedback */
+.game_theme input[name="confirmPassword"]:not(:placeholder-shown) {
+  border-color: rgba(34, 197, 94, 0.5) !important;
+}
+
+.game_theme input[name="confirmPassword"]:not(:placeholder-shown):invalid {
+  border-color: rgba(239, 68, 68, 0.5) !important;
+}
+
+/* Player join page specific styles */
+
+/* Centered page layout */
+.game_theme .page--centered {
+  max-width: 500px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+/* Access code form */
+.game_theme .page--centered .form-stack {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.game_theme .page--centered label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+  color: #e2e8f0;
+  text-align: left;
+}
+
+/* Input styling */
+.game_theme .page--centered input[type="text"] {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(59, 130, 246, 0.5) !important;
+  color: white !important;
+  backdrop-filter: blur(10px);
+  padding: 12px 16px !important;
+  border-radius: 8px !important;
+  text-align: center;
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+}
+
+.game_theme .page--centered input:focus {
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3) !important;
+  outline: none;
+}
+
+/* Submit button */
+.game_theme .page--centered button[type="submit"] {
+  background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  border: none !important;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
+  font-weight: 600;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+/* Buzzer button */
+.game_theme .buzzer {
+  background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%) !important;
+  border: none !important;
+  margin: 0 auto !important;
+  padding-left: 50px !important;
+  padding-right: 50px !important;
+  border-radius: 50% !important;
+  font-size: 2rem !important;
+  font-weight: 900 !important;
+  color: white !important;
+  text-transform: uppercase;
+  letter-spacing: 0.15em !important;
+  width: 200px !important;
+  height: 200px !important;
+  box-shadow: 
+    0 0 40px rgba(220, 38, 38, 0.6),
+    inset 0 4px 12px rgba(255, 255, 255, 0.3) !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  padding: 30px 60px !important;
+}
+
+.game_theme .buzzer:hover {
+  transform: scale(1.1) !important;
+  box-shadow: 
+    0 0 60px rgba(220, 38, 38, 0.8),
+    inset 0 4px 20px rgba(255, 255, 255, 0.4) !important;
+  background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%) !important;
+}
+
+.game_theme .buzzer:active {
+  transform: scale(0.95) !important;
+  box-shadow: 
+    0 0 20px rgba(220, 38, 38, 0.4),
+    inset 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+}
