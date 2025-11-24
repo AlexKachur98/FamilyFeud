@@ -256,6 +256,57 @@
   border-color: rgba(239, 68, 68, 0.5) !important;
 }
 
+/* Sign out/Logout page specific styles */
+
+/* Stacked page layout */
+.game_theme .page--stacked {
+  max-width: 500px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+/* Action grid styling */
+.game_theme .action-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* Menu card CTA buttons */
+.game_theme .menu-card__cta {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  border: none !important;
+  padding: 16px 24px !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  color: white !important;
+  text-decoration: none !important;
+  text-align: center;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
+}
+
+.game_theme .menu-card__cta:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5) !important;
+  text-decoration: none !important;
+  color: white !important;
+}
+
+/* Optional: Different color for secondary action */
+.game_theme .action-grid .menu-card__cta:last-child {
+  background: linear-gradient(180deg, #64748b 0%, #475569 100%) !important;
+  box-shadow: 0 4px 15px rgba(100, 116, 139, 0.3) !important;
+}
+
+.game_theme .action-grid .menu-card__cta:last-child:hover {
+  box-shadow: 0 8px 25px rgba(100, 116, 139, 0.5) !important;
+}
+
 /* Player join page specific styles */
 
 /* Centered page layout */
@@ -351,4 +402,139 @@
   box-shadow: 
     0 0 20px rgba(220, 38, 38, 0.4),
     inset 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Profile page specific styles */
+
+/* Profile card container */
+.game_theme .profile-card {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Profile avatar section */
+.game_theme .profile-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+/* Avatar image styling */
+.game_theme .avatar-img {
+  width: 120px !important;
+  height: 120px !important;
+  border-radius: 50% !important;
+  border: 3px solid rgba(59, 130, 246, 0.5) !important;
+  object-fit: cover !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Choose Image button */
+.game_theme .profile-avatar-button {
+  background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  border: none !important;
+  padding: 10px 20px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  color: white !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  text-align: center;
+}
+
+.game_theme .profile-avatar-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+/* Hide the default file input */
+.game_theme #profile-image-input {
+  display: none;
+}
+
+/* Profile form enhancements */
+.game_theme .profile-card .form-stack {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Save Changes button */
+.game_theme .profile-card .form-actions button[type="submit"] {
+  background: linear-gradient(180deg, #10b981 0%, #059669 100%) !important;
+  border: none !important;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
+  font-weight: 600;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.game_theme .profile-card .form-actions button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+/* Gameboard page specific styles */
+
+.game-board-player {
+  /* Keep their existing styles */
+  /* Add your glow */
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.game-board-question {
+  /* Keep background image */
+  /* Add blue effects */
+  box-shadow: 0 8px 32px rgba(30, 64, 175, 0.3);
+  border: 2px solid rgba(59, 130, 246, 0.4);
+}
+
+.game-board-timer,
+.game-board-player__score {
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+}
+
+.game-board-player--active {
+  filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.6));
+}
+
+/* Home/Landing page specific styles */
+
+.game_theme .landing-basic__logo-img {
+  filter: drop-shadow(0 0 30px rgba(59, 130, 246, 0.6)) 
+          drop-shadow(0 0 60px rgba(59, 130, 246, 0.3));
+  transition: all 0.5s ease;
+}
+
+.game_theme .landing-basic__logo-img:hover {
+  filter: drop-shadow(0 0 40px rgba(59, 130, 246, 0.8))
+          drop-shadow(0 0 80px rgba(59, 130, 246, 0.4));
+}
+
+.game_theme .landing-basic__cta--primary {
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+}
+
+.game_theme .landing-basic__cta--primary:hover {
+  box-shadow: 0 0 50px rgba(59, 130, 246, 0.7);
+}
+
+.game_theme .landing-basic__body {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.primary-button:hover,
+button[type="submit"]:hover, 
+.landing-basic__cta--primary:hover,
+.menu-card__cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+  /* Consistent glow effect */
 }

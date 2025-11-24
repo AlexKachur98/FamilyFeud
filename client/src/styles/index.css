@@ -43,10 +43,6 @@ button {
   transition: filter 0.2s ease;
 }
 
-button:hover {
-  filter: brightness(1.05);
-}
-
 button:focus-visible {
   outline: 3px solid rgba(59, 130, 246, 0.5);
   outline-offset: 2px;
@@ -660,9 +656,13 @@ button:focus-visible {
 }
 
 .landing-basic__cta--primary:hover {
-  background: linear-gradient(180deg, #60a5fa 0%, #2563eb 55%, #1e40af 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 26px 55px rgba(59, 130, 246, 0.6);
+  transform: translateY(-4px) !important;
+  box-shadow: 
+    0 12px 40px rgba(59, 130, 246, 0.6),
+    0 0 0 2px rgba(255, 255, 255, 0.3) !important;
+  background: linear-gradient(180deg, #60a5fa 0%, #2563eb 55%, #1e40af 100%) !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  filter: none !important;
 }
 
 .landing-basic__cta--secondary {
@@ -672,10 +672,13 @@ button:focus-visible {
 }
 
 .landing-basic__cta--secondary:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.7);
-  color: #FFFFFF;
-  transform: translateY(-1px);
+  transform: translateY(-4px) !important;
+  box-shadow: 
+    0 12px 40px rgba(59, 130, 246, 0.6),
+    0 0 0 2px rgba(255, 255, 255, 0.3) !important;
+  background: linear-gradient(180deg, #60a5fa 0%, #2563eb 55%, #1e40af 100%) !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  filter: none !important;
 }
 
 .landing-basic__backdrop {
