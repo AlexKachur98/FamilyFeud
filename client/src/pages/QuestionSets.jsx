@@ -49,9 +49,15 @@ export default function QuestionSets() {
   };
 
  const addAnswer = () => {
-  if (answers.length >= 8) return; // Stop at 8
-  setAnswers([...answers, { answer: '', points: '' }]);
-};
+   if (answers.length >= 8) return; // Stop at 8
+   setAnswers([...answers, { answer: '', points: '' }]);
+  };
+
+  const removeAnswer = (index) => {
+    const newAnswers = [...answers];
+    newAnswers.splice(index, 1); // This should remove the specific index
+    setAnswers(newAnswers);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -207,10 +213,23 @@ export default function QuestionSets() {
                   type="number"
                   value={answer.points}
                   onChange={(e) => handleAnswerChange(index, 'points', e.target.value)}
+                  onInput={(e) => {
+                    if (e.target.value > 99) e.target.value = 99;
+                    if (e.target.value < 0) e.target.value = 0;
+                  }}
                   placeholder="Points"
                   min="0"
+                  max="99"
                   required
                 />
+                <button
+                  type="button"
+                  className="remove-answer-button"
+                  onClick={() => removeAnswer(index)} // This should be the current row's index
+                  aria-label="Remove answer"
+                >
+                  ×
+                </button>
               </div>
             ))}
           </div>

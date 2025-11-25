@@ -531,9 +531,11 @@ button[type="submit"]:hover,
 
 .game_theme .question-sets-page .answer-list__row {
   display: grid !important;
-  grid-template-columns: 4fr 1fr !important;
-  gap: 1rem !important;
+  grid-template-columns: 5fr 1fr auto !important;
+  gap: 2rem !important;
   width: 100% !important;  
+  margin-bottom: 1rem !important;
+  align-items: center !important;
 }
 
 .game_theme .question-sets-page .answer-list__row input[type="text"] {
@@ -553,6 +555,7 @@ button[type="submit"]:hover,
   background: rgba(255, 255, 255, 0.1) !important;
   border: 1px solid rgba(59, 130, 246, 0.5) !important;
   color: white !important;
+  width: 100px !important;
   padding: 12px 16px !important;
   border-radius: 8px !important;
   min-height: 44px !important;
@@ -607,6 +610,45 @@ button[type="submit"]:hover,
   box-shadow: 
     0 6px 20px rgba(59, 130, 246, 0.6),
     0 0 30px rgba(59, 130, 246, 0.3) !important;
+}
+
+.game_theme .remove-answer-button {
+  background: rgba(239, 68, 68, 0.2) !important;
+  border: 1px solid rgba(239, 68, 68, 0.5) !important;
+  color: #fca5a5 !important;
+  border-radius: 50% !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.2rem !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+}
+
+.game_theme .remove-answer-button:hover {
+  background: rgba(239, 68, 68, 0.3) !important;
+  transform: scale(1.1) !important;
+}
+
+.game_theme select {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(59, 130, 246, 0.5) !important;
+  color: white !important;
+  backdrop-filter: blur(10px);
+}
+
+.game_theme select option {
+  background: rgba(15, 23, 42, 0.9) !important;
+  color: white !important;
+}
+
+.game_theme select:focus {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3) !important;
+  outline: none;
 }
 
 .game_theme .question-sets-page textarea,
