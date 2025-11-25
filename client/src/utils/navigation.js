@@ -19,6 +19,11 @@ export const NAV_ITEMS = [
     description: 'Control surface for hosts with quick stats and active sessions.',
   },
   {
+    path: '/questions',
+    label: 'Questions',
+    description: 'Manage survey questions for Family Feud rounds.',
+  },
+  {
     path: '/question-sets',
     label: 'Question Sets',
     description: 'Create, edit, and curate survey banks for upcoming matches.',

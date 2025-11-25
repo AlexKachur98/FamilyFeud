@@ -8,7 +8,7 @@
 import { useEffect, useState } from 'react';
 import PageSection from '../components/PageSection.jsx';
 import profileIcon from '../assets/Icon.png';
-import { apiFetch } from '../utils/api.js';
+import { apiFetch } from '../api/api.js';
 import { useAuth } from '../components/auth/AuthContext.js';
 
 export default function UserProfile() {
@@ -82,9 +82,7 @@ export default function UserProfile() {
             <PageSection
                 title='Profile Information'
                 description='Update your account details below.'
-            >
-
-                <div className='profile-card'>
+            >                
                     <div className='profile-avatar'>
                         <img
                             src={user?.image || profileIcon}
@@ -101,11 +99,10 @@ export default function UserProfile() {
                         />
                         <label className='profile-avatar-button' htmlFor="profile-image-input">
                             Choose Image
-                        </label>
-                    </div>
+                        </label>                   
 
 
-                    <form className='form-stack' onSubmit={handleSubmit}>
+                    <form className='form-stack form-stack--no-card' onSubmit={handleSubmit}>
                         <label>
                             Username
                             <input

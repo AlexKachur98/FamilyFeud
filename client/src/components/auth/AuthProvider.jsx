@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { AuthContext } from './AuthContext';
-import { auth } from '../../utils/api';
+import { auth } from '../../api/api';
 
 
 export default function AuthProvider({ children }) {

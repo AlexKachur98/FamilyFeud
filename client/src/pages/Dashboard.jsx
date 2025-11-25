@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageSection from '../components/PageSection.jsx';
-import { apiFetch } from '../utils/api.js';
+import { apiFetch } from '../api/api.js';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -78,9 +78,13 @@ export default function Dashboard() {
   }, []);
 
   if (loading) {
-    return <div className="page page--stacked">Loading dashboard...</div>;
+    return (
+      <div className="game_theme" style={{ minHeight: '100vh' }}>
+        <div className="page page--stacked">Loading dashboard...</div>
+      </div>
+    );
   }
-
+  
   return (
     <div className="game_theme">
     <div className="page page--stacked">

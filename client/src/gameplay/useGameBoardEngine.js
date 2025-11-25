@@ -5,7 +5,7 @@
  * @purpose Encapsulates Family Feud board state transitions, timers, backend calls, and handlers for reuse.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ai, questions } from '../utils/api.js';
+import { ai, questions } from '../api/api.js';
 
 import {
   ANSWERING_PHASES,
