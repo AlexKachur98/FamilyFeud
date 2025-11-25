@@ -74,7 +74,7 @@ export default {
 
       let user = data.toObject();
       
-      if (data?.image) user.image = `data:${data.image.contentType};base64,${data.image.data.toString('base64')}`;
+      if (data?.image?.data) user.image = `data:${data.image.contentType};base64,${data.image.data.toString('base64')}`;
 
       res.status(200).json({
         message: "Signed in successfully",
