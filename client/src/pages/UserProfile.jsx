@@ -8,7 +8,7 @@
 import { useEffect, useState } from 'react';
 import PageSection from '../components/PageSection.jsx';
 import profileIcon from '../assets/Icon.png';
-import { apiFetch } from '../utils/api.js';
+import { apiFetch } from '../api/api.js';
 import { useAuth } from '../components/auth/AuthContext.js';
 
 export default function UserProfile() {

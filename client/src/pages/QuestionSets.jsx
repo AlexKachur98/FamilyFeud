@@ -7,7 +7,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageSection from '../components/PageSection.jsx';
-import { apiFetch } from '../utils/api.js';
+import { apiFetch } from '../api/api.js';
 
 export default function QuestionSets() {
   const navigate = useNavigate();
