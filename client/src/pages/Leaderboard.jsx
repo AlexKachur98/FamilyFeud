@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import backgroundImage from "../assets/FF-Leaderboard.png";
 import { getLeaderboard } from "../utils/leaderboardApi";
