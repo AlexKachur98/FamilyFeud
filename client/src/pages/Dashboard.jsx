@@ -78,9 +78,13 @@ export default function Dashboard() {
   }, []);
 
   if (loading) {
-    return <div className="page page--stacked">Loading dashboard...</div>;
+    return (
+      <div className="game_theme" style={{ minHeight: '100vh' }}>
+        <div className="page page--stacked">Loading dashboard...</div>
+      </div>
+    );
   }
-
+  
   return (
     <div className="game_theme">
     <div className="page page--stacked">

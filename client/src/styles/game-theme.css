@@ -1,8 +1,8 @@
 .game_theme {
   /* Blue starfield gradient background */
-  background: radial-gradient(circle at 50% -10%, #2563eb 0%, #0f172a 60%, #020617 100%);
+  background: radial-gradient(circle at 50% -10%, #2563eb 0%, #0f172a 60%, #020617 100%) !important;
   color: #fff;
-  min-height: 100vh;
+  min-height: 100vh !important;
   position: relative;
 }
 
@@ -33,6 +33,12 @@
 @keyframes stars {
   from { transform: translateY(0); }
   to { transform: translateY(-200px); }
+}
+
+/* Add loading state styling that maintains the theme */
+.loading-message, .empty-state {
+  background: transparent !important;
+  color: #e2e8f0 !important;
 }
 
 /* Glowing containers */

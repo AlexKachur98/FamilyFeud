@@ -88,7 +88,11 @@ export default function Sessions() {
   };
 
   if (loading) {
-    return <div className="page page--stacked">Loading sessions...</div>;
+    return (
+      <div className="game_theme" style={{ minHeight: '100vh' }}>
+        <div className="page page--stacked">Loading sessions...</div>
+      </div>
+    );
   }
 
   return (

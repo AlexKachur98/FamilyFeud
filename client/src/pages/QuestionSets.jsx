@@ -114,8 +114,10 @@ export default function QuestionSets() {
 
   if (loading) {
     return (
-      <div className="page page--stacked">
-        <div className="loading-message">Loading question sets...</div>
+      <div className="game_theme" style={{ minHeight: '100vh' }}>
+        <div className="page page--stacked">
+          <div className="loading-message">Loading question sets...</div>
+        </div>
       </div>
     );
   }
