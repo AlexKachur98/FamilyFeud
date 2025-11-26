@@ -21,8 +21,8 @@ export default function Sidebar() {
     const toggleMenu = () => setMenuOpen((v) => !v);
     const closeMenu = () => setMenuOpen(false);
 
-    const handleSignOut = () => {
-        signOut();
+    const handleSignOut = async () => {
+        await signOut();
         navigate('/');
     }
 
