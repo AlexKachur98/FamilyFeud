@@ -19,6 +19,11 @@ export const NAV_ITEMS = [
     description: 'Control surface for hosts with quick stats and active sessions.',
   },
   {
+    path: '/accounts',
+    label: 'Accounts',
+    description: 'Manage user accounts for Family Feud.',
+  },
+  {
     path: '/questions',
     label: 'Questions',
     description: 'Manage survey questions for Family Feud rounds.',

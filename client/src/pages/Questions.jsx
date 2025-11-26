@@ -12,12 +12,9 @@ import { useQuestions } from '../context/questions.context.jsx';
 export default function Questions() {
   const navigate = useNavigate();
 
-  const { questions, setQuestions } = useQuestions();
+  const { isLoadingQuestions, questions, setQuestions } = useQuestions();
 
-  // const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [answers, setAnswers] = useState([{ answer: '', points: '' }, { answer: '', points: '' }, { answer: '', points: '' }]);
-  // const [roundType, setRoundType] = useState('no');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,29 +34,14 @@ export default function Questions() {
     if (answers.length < 8) setAnswers([...answers, { answer: '', points: '' }]);
   };
 
-  // if (loading) {
-  //   return (
-  //     <div className="page page--stacked">
-  //       <div className="loading-message">Loading questions...</div>
-  //     </div>
-  //   );
-  // }
-
   return (
     <div className="game_theme">
-    <div className="page page--wide question-sets-page">
+    <div className="page page--wide questions-page">
       <header className="page__header">
         <p className="eyebrow">Question Bank</p>
         <h2>Questions</h2>
         <p>Curate questions for upcoming episodes.</p>
       </header>
-
-      {error && (
-        <div className="error-message">
-          <p>{error}</p>
-          <button onClick={() => window.location.reload()}>Retry</button>
-        </div>
-      )}
 
       <PageSection
         title="Create Question"
@@ -145,7 +127,9 @@ export default function Questions() {
         title="Existing Questions"
         description="Edit or remove questions."
       >
-        {questions.length === 0 ? (
+        { isLoadingQuestions ? (
+          <div className="loading-message">Loading questions...</div>
+        ) : questions.length === 0 ? (
           <div className="empty-state">
             <p>No questions found.</p>
             <p>Create your first question to organize your game content.</p>

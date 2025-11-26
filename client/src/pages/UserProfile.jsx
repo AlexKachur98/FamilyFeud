@@ -85,7 +85,7 @@ export default function UserProfile() {
             >                
                     <div className='profile-avatar'>
                         <img
-                            src={user?.image || profileIcon}
+                            src={typeof user.image === 'string' ? user.image : profileIcon}
                             id="profile-avatar-img"
                             alt='Profile Avatar'
                             className='avatar-img'
