@@ -12,12 +12,35 @@ export const HOME_NAV_ITEM = {
     cardBody: 'Return to the main landing hub for quick actions.',
 };
 
-export const NAV_ITEMS = [
+export const NAV_USER_ITEMS = [
   {
     path: '/dashboard',
     label: 'Dashboard',
     description: 'Control surface for hosts with quick stats and active sessions.',
   },
+  {
+    path: '/sessions',
+    label: 'Sessions',
+    description: 'Monitor in-progress games, manage teams, and launch rounds.',
+  },
+  {
+    path: '/leaderboard',
+    label: 'Leaderboard',
+    description: 'View the rankings of all teams.',
+  },
+  {
+    path: '/question-sets',
+    label: 'Question Sets',
+    description: 'Create, edit, and curate survey banks for upcoming matches.',
+  },
+  {
+    path: "/profile",
+    label: "Profile",
+    description: "View and update account details.",
+  }
+];
+
+export const NAV_ADMIN_ITEMS = [
   {
     path: '/accounts',
     label: 'Accounts',
@@ -29,36 +52,15 @@ export const NAV_ITEMS = [
     description: 'Manage survey questions for Family Feud rounds.',
   },
   {
-    path: '/question-sets',
-    label: 'Question Sets',
-    description: 'Create, edit, and curate survey banks for upcoming matches.',
-  },
-  {
-    path: '/sessions',
-    label: 'Sessions',
-    description: 'Monitor in-progress games, manage teams, and launch rounds.',
-  },
-  {
-    path: "/profile",
-    label: "Profile",
-    description: "View and update account details.",
-  },
-  {
-
-    path: '/game-board',
-    label: 'Game Board',
-    description: 'Preview the live board layout with placeholder slots.',
-  },
-  {
-    path: '/leaderboard',
-    label: 'Leaderboard',
-    description: 'View the rankings of all teams.',
-  },
-  {
     path: '/player',
     label: 'Player Join',
     description: 'Entry point for contestants to join matches using an access code.',
   },
+  {
+    path: '/game-board',
+    label: 'Game Board',
+    description: 'Preview the live board layout with placeholder slots.',
+  }
 ];
 
 export const AUTH_NAV_ITEMS = [
@@ -74,15 +76,15 @@ export const AUTH_NAV_ITEMS = [
     },
 ];
 
-export const PRIMARY_USER_NAV_LINKS = [HOME_NAV_ITEM, ...NAV_ITEMS];
-export const PRIMARY_ADMIN_NAV_LINKS = [HOME_NAV_ITEM, ...NAV_ITEMS];
+export const PRIMARY_USER_NAV_LINKS = [HOME_NAV_ITEM, ...NAV_USER_ITEMS];
+export const PRIMARY_ADMIN_NAV_LINKS = [HOME_NAV_ITEM, ...NAV_USER_ITEMS, ...NAV_ADMIN_ITEMS, ...AUTH_NAV_ITEMS];
 
 /**
  * Returns menu entries that should render as cards on the home dashboard.
  * @returns {Array} menu configuration excluding the home overview card.
  */
 export function getDashboardCards() {
-    return NAV_ITEMS;
+    return NAV_USER_ITEMS;
 }
 
 /**

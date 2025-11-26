@@ -7,12 +7,13 @@
 
 import { useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { NAV_ITEMS, AUTH_NAV_ITEMS, HOME_NAV_ITEM } from '../utils/navigation.js';
+import { NAV_USER_ITEMS, AUTH_NAV_ITEMS, HOME_NAV_ITEM, NAV_ADMIN_ITEMS } from '../utils/navigation.js';
 import { useAuth } from '../components/auth/AuthContext.js';
 
 import Loader from '../components/loader/loader.jsx';
 
 export default function Layout() {
+  const { user } = useAuth();
   const location = useLocation();
   const isLanding = location.pathname === '/';
   const [status, setStatus] = useState('idle');
@@ -52,7 +53,7 @@ export default function Layout() {
           <nav className="app-nav">
 
             <ul className="app-nav__list">
-              {[HOME_NAV_ITEM, ...NAV_ITEMS].map((item) => (
+              {(user?.admin ? [HOME_NAV_ITEM, ...NAV_USER_ITEMS, ...NAV_ADMIN_ITEMS] : [HOME_NAV_ITEM, ...NAV_USER_ITEMS]).map((item) => (
                 <li key={item.path}>
                   <NavLink to={item.path} className="app-nav__link">
                     {item.label}
