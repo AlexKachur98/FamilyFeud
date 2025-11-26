@@ -48,7 +48,7 @@ export default function Sidebar() {
                 </button>
                 <ul className="landing-basic__drawer-list">
                     {
-                        (user.admin ? PRIMARY_ADMIN_NAV_LINKS : PRIMARY_USER_NAV_LINKS).map(link => (
+                        (user?.admin ? PRIMARY_ADMIN_NAV_LINKS : PRIMARY_USER_NAV_LINKS).map(link => (
                             <li key={link.path}>
                             <Link to={link.path} onClick={closeMenu}>
                                 {link.label}
