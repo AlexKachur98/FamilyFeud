@@ -297,6 +297,11 @@ button:focus-visible {
   background: #e2e8f0;
 }
 
+.table-placeholder__avatar {
+  width: 50px;
+  border-radius: 50%;
+}
+
 .table-placeholder__actions {
   display: flex;
   gap: 0.5rem;
