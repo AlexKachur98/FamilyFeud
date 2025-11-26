@@ -42,7 +42,7 @@ export const questions = {
     const query = params.toString() ? `?${params.toString()}` : '';
     return apiFetch(`/question${query}`, { method: 'GET' });
   },
-  getById: (id) => apiFetch(`/question/${id}`, { method: 'GET' })
+  getById: (id) => apiFetch(`/question/all/${id}`, { method: 'GET' })
 };
 
 export const ai = {

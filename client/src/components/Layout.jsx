@@ -10,21 +10,21 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 import { NAV_USER_ITEMS, AUTH_NAV_ITEMS, HOME_NAV_ITEM, NAV_ADMIN_ITEMS } from '../utils/navigation.js';
 import { useAuth } from '../components/auth/AuthContext.js';
 
-import Loader from '../components/loader/loader.jsx';
-
 export default function Layout() {
-  const { user } = useAuth();
+  
   const location = useLocation();
   const isLanding = location.pathname === '/';
-  const [status, setStatus] = useState('idle');
+
   const navigate = useNavigate();
-  const { signOut, isLoading, isLoggedIn } = useAuth();
+  
+  const { user, signOut, isLoggedIn } = useAuth();
+  const [status, setStatus] = useState('idle');
 
   const handleSignOut = async () => {
     setStatus('loading');
     try {
       const { success, message } = await signOut();
-      // setSignOutStatus('success'); // no point setting a status that wont be seen due to navigation.
+      
       if (success) navigate('/signed-out');
       else setStatus({ state: 'error', message: message || 'Checking credentials…' });
 
@@ -34,9 +34,7 @@ export default function Layout() {
     }
   };
 
-  return isLoading ? (
-    <Loader />
-  ) : (
+  return (
     <div className={`app-shell${isLanding ? ' app-shell--landing' : ''}`}>
       {isLanding ? null : (
         <header className="app-header">

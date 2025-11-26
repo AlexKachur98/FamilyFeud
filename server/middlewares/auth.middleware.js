@@ -21,7 +21,7 @@ const requireSignin = async (req, res, next) => {
     if (!data) return res.status(401).json({ valid: false, user: null });
 
     let user = data.toObject();
-    if (user?.image) user.image = `data:${user.image.contentType};base64,${user.image.data.toString('base64')}`;
+    if (user?.image?.data) user.image = `data:${user.image.contentType};base64,${user.image.data.toString('base64')}`;
 
     req.auth = decode;
     req.user = user;
