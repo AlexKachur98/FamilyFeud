@@ -13,7 +13,7 @@ export default function SearchBar({ placeholder, data, setData }) {
             onChange={(e) => {
                 const query = e.target.value.toLowerCase();
                 const filteredData = data.filter(d => 
-                    d.text.toLowerCase().includes(query) ||
+                    (d?.text && d.text.toLowerCase().includes(query)) ||
                     (d?.tags && d?.tags.some(tag => tag.toLowerCase().includes(query)))
                 );
                 setData(filteredData);
