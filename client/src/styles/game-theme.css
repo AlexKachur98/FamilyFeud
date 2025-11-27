@@ -149,6 +149,11 @@
     font-size: medium;
 }
 
+.game_theme input[type="search" i]::-webkit-search-cancel-button {
+    filter: invert(1);
+    cursor: pointer;
+}
+
 /* Futuristic inputs */
 .game_theme input,
 .game_theme textarea,
