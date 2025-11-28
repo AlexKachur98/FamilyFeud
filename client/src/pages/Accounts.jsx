@@ -126,7 +126,7 @@ export default function Accounts() {
         : <VerifyAction 
             action={action}
             text={focusedUser.username}
-            image={focusedUser?.image?.data === null ? profileIcon : focusedUser.image}
+            image={typeof focusedUser.image === 'string' ? focusedUser.image : profileIcon}
             onConfirm={(e) => action === 'edit' ? handleEditSubmit(e) : handleDeleteSubmit(e)} 
             onCancel={(e) => handleVerifyCancel(e)}
           />
