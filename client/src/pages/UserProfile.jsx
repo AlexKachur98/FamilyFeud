@@ -9,86 +9,85 @@ import { useState } from 'react';
 import { apiFetch } from '../api/api.js';
 import { useAuth } from '../components/auth/AuthContext.js';
 
+import VerifyAction from '../components/VerifyAction.jsx';
 import PageSection from '../components/PageSection.jsx';
 import profileIcon from '../assets/Icon.png';
 import logo from '/Family_Feud_Logo.png';
 
-const COUNTRY_LIST = [
-    "Australia",
-    "Brazil",
-    "Canada",
-    "Dominican Republic",
-    "France",
-    "Ghana",
-    "Italy",
-    "Jamaica",
-    "Japan",
-    "Mexico",
-    "Russia",
-    "Spain",
-    "United Kingdom",
-    "United States",
-    "United Arab Emirates"
-];
+import COUNTRY_LIST from '../assets/countries.json';
 
 export default function UserProfile() {
     const { user, setUser } = useAuth();
 
     const [form, setForm] = useState({
         username: user?.username || '',
-        password: '',
         image: user?.image || null,
-        country: user.country || "",
+        country: user?.country || "",
+        bio: user?.bio || ""
     });
 
-    const [status, setStatus] = useState({
-        state: 'idle', 
-        message: '',
-    });
+    const [showWarning, setShowWarning] = useState(false);
+
+    const [formPassword, setFormPassword] = useState({ password: '', confirmPassword: '' });
+
+    const defaultStatus = { state: 'idle', message: '' };
+    const [status, setStatus] = useState(defaultStatus);
+    const [action, setAction] = useState('');
 
     function handleChange(e) {
         const { name, value, files } = e.target;
         
         if (files) setForm((prev) => ({ ...prev, image: files[0] }));
+        else if (name === 'password' || name === 'confirmPassword') setFormPassword((prev) => ({ ...prev, [name]: value }) );
         else setForm((prev) => ({ ...prev, [name]: value }) );
+
+        if (e.target.name === 'password' && e.target.value === '') setFormPassword({ password: '', confirmPassword: '' });
+
+        setStatus(defaultStatus);
     }
 
-async function handleSubmit(e) {
-e.preventDefault();
+    async function handleEditSubmit(e) {
+        e.preventDefault();
 
-setStatus({ state: 'loading', message: '' });
+        if (formPassword.password !== formPassword.confirmPassword) {
+            setStatus({ state: 'error', message: 'Passwords do not match.' });
+            return;
+        } else if (formPassword.password.length > 0 && formPassword.password.length < 6) {
+            setStatus({ state: 'error', message: 'Password must be at least 6 characters.' });
+            return;
+        }
 
-const formData = new FormData();
-formData.append('username', form.username);
+        setStatus({ state: 'loading', message: '' });
 
-if (form.password) {
-    formData.append('password', form.password);
-}
+        const formData = new FormData();
+        
+        if (form.username) formData.append('username', form.username);
+        if (form.image) formData.append('image', form.image);
+        if (form.country) formData.append('country', form.country);
+        if (form.bio) formData.append('bio', form.bio);
+        if (formPassword.password && formPassword.password === formPassword.confirmPassword) formData.append('password', formPassword.password);
 
-if (form.image) {
-    formData.append('image', form.image);
-}
+        const response = await apiFetch(`/user/${user._id}`, {
+            method: 'PUT',
+            body: formData,
+        });
 
-if (form.country) {
-    formData.append('country', form.country);
-}
+        if (response.ok) {
+            const updatedUser = await response.json();
+            setUser(updatedUser);
+            setStatus({ state: 'success', message: 'Profile updated.' });
+        } else {
+            setStatus({ state: 'error', message: 'Profile update unsuccessful. Please try again.' });
+        }
 
-const response = await apiFetch(`/user/${user._id}`, {
-    method: 'PUT',
-    body: formData,
-});
+        setShowWarning(false);
+    }
 
-if (response.ok) {
-    const updatedUser = await response.json();
-    setUser(updatedUser);
-    setStatus({ state: 'success', message: 'Profile updated.' });
-} else {
-    setStatus({
-        state: 'error',
-        message: 'Profile update unsuccessful. Please try again.',
-     });
-   }
-}
+    const handleVerification = (e, actionType) => {
+        e.preventDefault();
+        setAction(actionType);
+        setShowWarning(true);
+    }
 
     const handleImageSearch = (e) => {
         const file = e.target.files && e.target.files[0];
@@ -103,45 +102,53 @@ if (response.ok) {
         handleChange(e);
     };
 
-async function handleDeleteAccount() {
-if (!window.confirm("Deleting your account is permanent. Are you sure you would like to proceed? ")) {
-    return;
-  }
+    async function handleDeleteAccount() {
 
-  setStatus({ state: 'loading', message: '' });
-  try {
-    const response = await apiFetch(`/user/${user._id}`, {
-      method: 'DELETE',
-    });
+        setStatus({ state: 'loading', message: '' });
+        try {
+            const response = await apiFetch(`/user/${user._id}`, {
+            method: 'DELETE',
+            });
 
-    if (response.ok) {
-      setStatus({
-         state: 'success', 
-         message: 'Your account has been deleted.' });
-
-         setUser(null);
-
-         setTimeout(() => {
-            window.location.href = '/login';
-         }, 1000);
-    } else {
-      setStatus({
-        state: 'error',
-        message: 'We ran into an issue trying to delete your account. Please try again.',
-      });
+            if (response.ok) {
+                setStatus({ state: 'success', message: 'Your account has been deleted.' });
+                setUser(null);
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1000);
+            } else {
+                setStatus({ state: 'error', message: 'We ran into an issue trying to delete your account. Please try again.' });
+            }
+        } catch (err) {
+            setStatus({ state: 'error', message: 'Something went wrong while deleting your account. Please try again.' });
+        }
+        
+        setShowWarning(false);
     }
-  } catch (err) {
-    setStatus({
-      state: 'error',
-      message: 'Something went wrong while deleting your account. Please try again.',
-    });
-  }
-}
+
+    const handleVerifyCancel = (e) => {
+        e.preventDefault();
+
+        setAction('');
+        setShowWarning(false);
+    }
 
     const isSubmitting = status.state === 'loading';
 
     return (
         <div className="game_theme">
+
+            {
+                showWarning && (
+                    <VerifyAction
+                        action={action}
+                        text="your account"
+                        image={typeof user.image === 'string' ? user.image : profileIcon}
+                        onConfirm={(e) => action === 'edit' ? handleEditSubmit(e) : handleDeleteAccount(e)} 
+                        onCancel={(e) => handleVerifyCancel(e)}
+                    />
+                )
+            }
 
             <div className='page page--auth'>
                 <header className='page__header'>
@@ -174,7 +181,7 @@ if (!window.confirm("Deleting your account is permanent. Are you sure you would 
                             </label>                   
 
 
-                        <form className='form-stack form-stack--no-card' onSubmit={handleSubmit}>
+                        <form className='form-stack form-stack--no-card' onSubmit={(e) => handleVerification(e, 'edit')}>
                             <label>
                                 Username
                                 <input
@@ -183,52 +190,74 @@ if (!window.confirm("Deleting your account is permanent. Are you sure you would 
                                     value={form.username}
                                     onChange={handleChange}
                                     placeholder='Enter your username'
-                                    required
                                     disabled={isSubmitting}
                                 />
                             </label>
 
-                                <label>
-                                    Country
-                                    <select
+                            <label>
+                                Bio
+                                <textarea
+                                    name='bio'
+                                    value={form?.bio}
+                                    onChange={handleChange}
+                                    placeholder='Enter your bio...'
+                                    disabled={isSubmitting}
+                                />
+                            </label>
+
+                            <label>
+                                Country
+                                <select
                                     name="country"
                                     value={form.country}
                                     onChange={handleChange}
-                                    required
-                                    >
-                                     <option value="">Select your country</option>
+                                >
+                                    <option value="">Select your country</option>
 
-                                        {COUNTRY_LIST.map((c) => (
-                                        <option key={c} value={c}>
-                                        {c}
-                                    </option>
-                                  ))}
-                            </select>
-                        </label>
+                                    {COUNTRY_LIST.map((c, index) => (
+                                        <option key={`${c.name}-${index}`} value={c.code}>
+                                            {c.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
                             
                             <label>
                                 Password
                                 <input
                                     type='password'
                                     name='password'
-                                    value={form.password}
+                                    value={formPassword.password}
                                     onChange={handleChange}
                                     placeholder='Enter a new password'
-                                    required
                                     disabled={isSubmitting}
                                 />
                             </label>
+                            <div hidden={formPassword.password === ''}>
+                                <label>
+                                    Confirm Password
+                                    <input
+                                        type='password'
+                                        name='confirmPassword'
+                                        value={formPassword.confirmPassword}
+                                        onChange={handleChange}
+                                        placeholder='Enter a new password'
+                                        disabled={isSubmitting}
+                                    />
+                                </label>
+                            </div>
 
                             <div className='form-actions'>
                                 <button type='submit' disabled={status.state === 'loading'}>
                                     {status.state === 'loading' ? 'Saving...' : 'Save Changes'}
                                 </button>
                             </div>
-
+                            
+                                
                             <div className='form-actions'>
-                                    <button type='button'
-                                    className='delete-btn'
-                                    onClick={handleDeleteAccount}
+                                <button type='button'
+                                    className='delete-button'
+                                    onClick={(e) => handleVerification(e, 'delete')}
                                     disabled={isSubmitting}
                                 >
                                     Delete My Account

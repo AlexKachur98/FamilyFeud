@@ -9,16 +9,19 @@ import PageSection from "./PageSection";
 import profileIcon from '../assets/Icon.png';
 import { useEffect, useState } from "react";
 
+import COUNTRY_LIST from '../assets/countries.json';
+
 export default function EditUser({ user, setUser, onConfirm, onCancel }) {
 
     const [form, setForm] = useState({
         username: user?.username || '',
         email: user?.email || '',
+        country: user?.country || '',
         bio: user?.bio || '',
         image: user?.image || null,
     });
 
-    const [formPassword, setFormPassword] = useState({password: '', checkPassword: ''});
+    const [formPassword, setFormPassword] = useState({password: '', confirmPassword: ''});
     
     const defaultStatus = { state: 'idle', message: '' };
     const [status, setStatus] = useState(defaultStatus);
@@ -36,7 +39,7 @@ export default function EditUser({ user, setUser, onConfirm, onCancel }) {
         setFormPassword((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
         if (e.target.name === 'password' && e.target.value === '') {
-            setFormPassword({ password: '', checkPassword: '' });
+            setFormPassword({ password: '', confirmPassword: '' });
         }
         
         setStatus(defaultStatus);
@@ -66,7 +69,7 @@ export default function EditUser({ user, setUser, onConfirm, onCancel }) {
     const checkData = (e) => {
         e?.preventDefault();
 
-        if (formPassword.password !== formPassword.checkPassword) {
+        if (formPassword.password !== formPassword.confirmPassword) {
             setStatus({ state: 'error', message: 'Passwords do not match.' });
             return;
         } else if (formPassword.password.length > 0 && formPassword.password.length < 6) {
@@ -116,6 +119,7 @@ export default function EditUser({ user, setUser, onConfirm, onCancel }) {
                                     disabled={isSubmitting}
                                 />
                             </label>
+
                             <label><strong>Email:</strong> 
                                 <input
                                     type='email'
@@ -126,7 +130,25 @@ export default function EditUser({ user, setUser, onConfirm, onCancel }) {
                                     disabled={isSubmitting}
                                 />
                             </label>
+                            
+                            <label>
+                                Country
+                                <select
+                                    name="country"
+                                    value={form.country}
+                                    onChange={handleChange}
+                                >
+                                    <option value="">Select your country</option>
+                                    {COUNTRY_LIST.map((c, index) => (
+                                        <option key={`${c.name}-${index}`} value={c.code}>
+                                            {c.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
 
+                            <span></span>
+                            
                             <label><strong>Bio:</strong>
                                 <textarea
                                     name='bio'
@@ -136,7 +158,7 @@ export default function EditUser({ user, setUser, onConfirm, onCancel }) {
                                     disabled={isSubmitting}
                                 />
                             </label>
-
+                            
                             <div className="edit-password-container">
                                 <label><strong>Password:</strong>
                                     <input
@@ -148,30 +170,35 @@ export default function EditUser({ user, setUser, onConfirm, onCancel }) {
                                         disabled={isSubmitting}
                                     />
                                 </label>
-                                <div hidden={formPassword.password === ''}>
-                                    <label><strong>Confirm Password:</strong>
-                                        <input
-                                            type='password'
-                                            name='checkPassword'
-                                            value={formPassword.checkPassword}
-                                            onChange={handlePasswordChange}
-                                            placeholder='Enter the same password'
-                                            disabled={isSubmitting}
-                                        />
-                                    </label>
-                                </div>
+                                <label><strong>Confirm Password:</strong>
+                                    <input
+                                        type='password'
+                                        name='confirmPassword'
+                                        value={formPassword.confirmPassword}
+                                        onChange={handlePasswordChange}
+                                        placeholder='Enter the same password'
+                                        disabled={isSubmitting}
+                                    />
+                                </label>
                             </div>
+
                         </div>
                             
                         <div className="edit-user-action-buttons--wide">
                             <button type="submit" className="primary-button">Confirm</button>
                             <button type="reset" className="cancel-button" onClick={(e) => onCancel(e)}>Cancel</button>
                             
-                            <div style={{ color: status.state === 'error' ? 'red' : 'green'  }}>
-                                {status.state !== 'idle' && (
-                                    <p>{status.message}</p>
-                                )}
-                            </div>
+                            {status.state !== 'idle' && (
+                                <p
+                                    className={
+                                        'form-status ' +
+                                            (status.state === 'error' ? 'form-status--error' : 'form-status--success')
+                                            }
+                                        role='status'
+                                >
+                                    {status.message}
+                                </p>
+                            )}
                         </div>
                     </form>
                 </PageSection>

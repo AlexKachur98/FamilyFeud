@@ -398,18 +398,6 @@ button:focus-visible {
   box-sizing: border-box;
 }
 
-.form-grid textarea {
-  width: 100%;
-  max-width: 100%;
-  padding: 0.65rem;
-  resize: vertical;
-  border-radius: 10px;
-  border: 1px solid rgba(59, 130, 246, 0.5);
-  box-sizing: border-box;
-  min-height: 80px;
-  max-height: 200px;
-}
-
 .form-grid .profile-detail textarea {
   min-height: 135px;
   max-height: 135px;
@@ -472,6 +460,15 @@ button:focus-visible {
 }
 
 .form-grid textarea {
+  width: 100%;
+  max-width: 100%;
+  resize: vertical;
+  min-height: 80px;
+  max-height: 200px;
+  box-sizing: border-box;
+}
+
+.form-stack textarea {
   width: 100%;
   max-width: 100%;
   resize: vertical;
@@ -1436,27 +1433,34 @@ button:focus-visible {
   cursor: not-allowed;
 }
 
-.delete-btn {
-  background-color: #b30000; 
-  color: white;
+.delete-button {
+  background: linear-gradient(180deg, #e60000 0%, #bd0505 100%);
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 1rem;
-  box-shadow: 0 12px 25px rgba(255, 0, 0, 0.35);
-  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 
+    0 4px 15px rgba(219, 28, 28, 0.4),
+    0 0 20px rgba(219, 28, 28, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  min-height: 44px;
+  min-width: 180px;
+  width: 100%;
+  padding: 12px 32px;
+  border-radius: 8px;
 }
 
-.delete-btn:hover {
-  background-color: #e60000; 
-  transform: translateY(-2px) scale(1.03); 
-  filter: brightness(1.05);
-  box-shadow: 0 18px 35px rgba(255, 0, 0, 0.55); 
+.delete-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 20px rgba(219, 28, 28, 0.5),
+    0 0 30px rgba(219, 28, 28, 0.3);
 }
 
-.delete-btn:disabled {
+.delete-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }

@@ -15,6 +15,7 @@ const UserSchema = new mongoose.Schema({
         match: [/.+\@.+\..+/, 'Please fill a valid email address'],
         required: "Email is required"
     },
+    country: { type: String, default: '' },
     bio: { type: String, default: '' },
     image: {
         data: { type: Buffer, default: null },
