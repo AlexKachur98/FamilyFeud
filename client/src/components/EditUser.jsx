@@ -55,6 +55,14 @@ export default function EditUser({ user, setUser, onConfirm, onCancel }) {
         handleChange(e);
     };
 
+    useEffect(() => {
+        return () => {
+            if (form.image && typeof form.image === 'string' && form.image.startsWith('blob:')) {
+                URL.revokeObjectURL(form.image);
+            }
+        };
+    }, [form.image]);
+
     const checkData = (e) => {
         e?.preventDefault();
 
