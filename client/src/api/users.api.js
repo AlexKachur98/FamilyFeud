@@ -37,10 +37,7 @@ export const getUserById = async (id) => {
 export const updateUserById = async (id, user) => {
     const response =  await apiFetch(`/user/${id}`, {
         method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(user)
+        body: user
     })
     .then(response => response.json())
     .then(data => data)
