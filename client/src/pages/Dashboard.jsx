@@ -5,7 +5,7 @@ import { apiFetch } from '../api/api.js';
 
 import Sidebar from '../components/Sidebar.jsx';
 import PageSection from '../components/PageSection.jsx';
-import logo from '../../public/Family_Feud_Logo.png';
+import logo from '/Family_Feud_Logo.png';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -81,14 +81,6 @@ export default function Dashboard() {
 
     fetchData();
   }, []);
-
-  // if (loading) {
-  //   return (
-  //     <div className="game_theme" style={{ minHeight: '100vh' }}>
-  //       <div className="page page--stacked">Loading dashboard...</div>
-  //     </div>
-  //   );
-  // }
   
   return (
     <div className="game_theme">

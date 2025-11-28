@@ -17,7 +17,7 @@ import PageSection from '../components/PageSection.jsx';
 import VerifyAction from '../components/VerifyAction.jsx';
 import NotificationAction from '../components/NotificationAction.jsx';
 
-import logo from '../../public/Family_Feud_Logo.png';
+import logo from '/Family_Feud_Logo.png';
 
 export default function Accounts() {
 

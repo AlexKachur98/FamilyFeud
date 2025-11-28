@@ -11,7 +11,7 @@ import { apiFetch } from '../api/api.js';
 
 import Sidebar from '../components/Sidebar.jsx';
 import PageSection from '../components/PageSection.jsx';
-import logo from '../../public/Family_Feud_Logo.png';
+import logo from '/Family_Feud_Logo.png';
 
 export default function QuestionSets() {
   const navigate = useNavigate();

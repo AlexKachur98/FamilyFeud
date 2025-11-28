@@ -12,7 +12,7 @@ import { useAuth } from '../components/auth/AuthContext.js';
 import Sidebar from '../components/Sidebar.jsx';
 import PageSection from '../components/PageSection.jsx';
 import profileIcon from '../assets/Icon.png';
-import logo from '../../public/Family_Feud_Logo.png';
+import logo from '/Family_Feud_Logo.png';
 
 export default function UserProfile() {
     const { user, setUser } = useAuth();
