@@ -23,8 +23,8 @@ export default function PlayerJoin() {
     const response = await checkSessionAccessCode(sessionId, accessCode);
 
     if (response.ok) {
-      const sessionId = await response.json();
-      navigate(`/game-board/${sessionId}`);
+      const returnedSessionId = await response.json();
+      navigate(`/game-board/${returnedSessionId}`);
     } else alert('Invalid access code. Please try again.');
     
   };
