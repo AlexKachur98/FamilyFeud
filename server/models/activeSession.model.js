@@ -13,7 +13,7 @@ const ActiveSessionSchema = new mongoose.Schema({
   hostName: { type: String, trim: true, required: "Host name is required" },
   accessCode: { type: String, required: "Access code is required" },
   status: { type: String, enum: ['lobby', 'in_progress', 'completed'], default: 'lobby' },
-  questionSetId: { type: String, required: "Question set ID is required" },
+  questionSetId: { type: String, default: [] },
   teams: { type: [ TeamSchema ], default: [] },
   currentRound: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },

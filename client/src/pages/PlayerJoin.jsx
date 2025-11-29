@@ -4,12 +4,30 @@
  * @since 2025-11-04
  * @purpose Join surface for contestants entering a Family Feud session.
  */
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import PageSection from '../components/PageSection.jsx';
+import { checkSessionAccessCode } from '../api/sessions.api.js';
 
 export default function PlayerJoin() {
   const navigate = useNavigate();
+
+  const { sessionId } = useParams();
+
+  const handleJoin = async(e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+
+    const accessCode = formData.get('accessCode');
+
+    const response = await checkSessionAccessCode(sessionId, accessCode);
+
+    if (response.ok) {
+      const sessionId = await response.json();
+      navigate(`/game-board/${sessionId}`);
+    } else alert('Invalid access code. Please try again.');
+    
+  };
 
   return (
     <div className="game_theme">
@@ -24,10 +42,7 @@ export default function PlayerJoin() {
         <PageSection title="Access Code" description="Codes refresh for every new lobby to prevent random joins.">
           <form
             className="form-stack"
-            onSubmit={(e) => {
-              e.preventDefault();
-              navigate('/under-construction');
-            }}
+            onSubmit={handleJoin}
           >
             <label htmlFor="join-access-code">
               Access Code

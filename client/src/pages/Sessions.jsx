@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { apiFetch } from '../api/api.js';
 
+import CreateSession from '../components/CreateSession.jsx';
 import PageSection from '../components/PageSection.jsx';
 import logo from '/Family_Feud_Logo.png';
 
@@ -12,6 +13,8 @@ export default function Sessions() {
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [questionSets, setQuestionSets] = useState([]);
+
+  const [showCreatePopup, setShowCreatePopup] = useState(false);
 
   // Fetch sessions and question sets
   useEffect(() => {
@@ -94,7 +97,19 @@ export default function Sessions() {
   return (
     <div className="game_theme">
 
-      <div className="page page--stacked">
+      {
+        showCreatePopup && (
+          <CreateSession
+            onConfirm={(newSession) => {
+              setSessions((prev) => [...prev, newSession]);
+              setShowCreatePopup(false);
+            }}
+            onCancel={() => setShowCreatePopup(false)}
+          />
+        )
+      }
+
+      <div className="page page--wide">
         <header className="page__header">
           <p className="eyebrow">Live Control</p>
           <h2>Sessions</h2>
@@ -105,7 +120,7 @@ export default function Sessions() {
         <PageSection
           title="Session Lobby"
           description="Use this control panel to advance rounds and manage teams."
-          actions={<button type="button" className='primary-button' onClick={() => navigate('/sessions/create')}>Create New Session</button>}
+          actions={<button type="button" className='primary-button' onClick={() => setShowCreatePopup(true)}>Create New Session</button>}
         >
           {sessions && Array.isArray(sessions) ? (
             <div className="sessions-grid">
@@ -118,7 +133,7 @@ export default function Sessions() {
                     <article key={session.id} className="session-card">
                       <header className="session-card__header">
                         <div>
-                          <p className="session-card__code">Code: {session.accessCode}</p>
+                          <p className="session-card__code">Code: {session.id}</p>
                           <h3>{questionSetTitle}</h3>
                         </div>
                         <span className={`session-card__status status-${session.status}`}>
@@ -181,9 +196,9 @@ export default function Sessions() {
                         <button
                           type="button"
                           className="action-button view-button"
-                          onClick={() => navigate(`/sessions/${session.id}`)}
+                          onClick={() => navigate(`/join/${session.id}`)}
                         >
-                          View Details
+                          Join Game
                         </button>
                       </div>
                     </article>
@@ -198,7 +213,7 @@ export default function Sessions() {
               <button
                 type="button"
                 className="primary-button"
-                onClick={() => navigate('/sessions/create')}
+                onClick={() => setShowCreatePopup(true)}
               >
                 Create New Session
               </button>

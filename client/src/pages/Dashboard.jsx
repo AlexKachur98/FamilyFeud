@@ -179,7 +179,7 @@ export default function Dashboard() {
         <PageSection
           title="Active Sessions"
           description="Monitor lobbies and live games."
-          actions={sessions.length === 0 ? null : <button type="button" className='primary-button' onClick={() => navigate('/sessions/create')}>Create Session</button>}
+          actions={sessions.length === 0 ? null : <button type="button" className='primary-button' onClick={() => navigate('/sessions')}>Create Session</button>}
         >
           {
             sessions.length === 0 ? (
@@ -208,7 +208,7 @@ export default function Dashboard() {
                   loading ? <div className="loading-message">Loading sessions...</div>
                   : sessions.map((session) => (
                     <div key={session.id} className="table-placeholder__row">
-                      <span>{session.accessCode}</span>
+                      <span>{session.id}</span>
                       <span>{session.status}</span>
                       <span>{session.questionSetId || 'None'}</span>
                       <span>{session.teams?.map((team) => team.name).join(' vs ') || 'None'}</span>
@@ -217,7 +217,7 @@ export default function Dashboard() {
                         <button
                           type="button"
                           className="link-button"
-                          onClick={() => navigate(`/sessions/${session.id}`)}
+                          onClick={() => navigate(`/join/${session.id}`)}
                         >
                           Open
                         </button>

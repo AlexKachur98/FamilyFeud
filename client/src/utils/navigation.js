@@ -52,12 +52,12 @@ export const NAV_ADMIN_ITEMS = [
     description: 'Manage survey questions for Family Feud rounds.',
   },
   {
-    path: '/player',
+    path: '/join/0',
     label: 'Player Join',
     description: 'Entry point for contestants to join matches using an access code.',
   },
   {
-    path: '/game-board',
+    path: '/game-board/0',
     label: 'Game Board',
     description: 'Preview the live board layout with placeholder slots.',
   }

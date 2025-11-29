@@ -89,7 +89,7 @@ const getRandomQuestion = async (req, res) => {
 
         const question = {
             _id: result._id,
-            question: result.question,
+            question: result.text,
             size: result.answers.length
         };
 

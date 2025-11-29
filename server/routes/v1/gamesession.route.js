@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   createGameSession,
+  checkSessionAccessCode,
   getGameSession,
   updateGameSession,
   startRound,
@@ -17,9 +18,10 @@ export default Router()
 
   // Public routes
   .get('/:id', getGameSession)
-
+  
   // Protected routes
   .post('/', authMiddleware.requireSignin, createGameSession)
+  .post('/:id/check-code', authMiddleware.requireSignin, checkSessionAccessCode)
   .post('/:id/round', authMiddleware.requireSignin, startRound)
   .post('/:id/end-round', authMiddleware.requireSignin, endRound)
   .post('/:id/reveal-answer', authMiddleware.requireSignin, revealAnswer)

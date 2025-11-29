@@ -24,6 +24,22 @@ export const createGameSession = async (req, res) => {
   }
 };
 
+export const checkSessionAccessCode = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { accessCode } = req.body;
+    
+    const session = await ActiveSessionModel.findOne({ id });
+
+    if (!session) return res.status(404).json({ message: 'Session not found' });
+    if (session.accessCode !== accessCode) return res.status(403).json({ message: 'Invalid access code' });
+    
+    res.status(200).json(session._id);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Get a game session by ID
 export const getGameSession = async (req, res) => {
   try {

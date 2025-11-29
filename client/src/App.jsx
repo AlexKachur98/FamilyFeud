@@ -56,8 +56,8 @@ export default function App() {
               <Route path="leaderboard" element={<Leaderboard />} />
               <Route path="question-sets" element={<QuestionSets />} />
               <Route path="sessions" element={<Sessions />} />
-              <Route path="player" element={<PlayerJoin />} />
-              <Route path="/game-board" element={<GameBoard />} />
+              <Route path="join/:sessionId" element={<PlayerJoin />} />
+              <Route path="game-board/:sessionId" element={<GameBoard />} />
               <Route path="profile" element={<UserProfile />} />
               <Route path="under-construction" element={<UnderConstruction />} />
             </Route>
