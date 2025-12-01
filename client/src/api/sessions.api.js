@@ -20,7 +20,6 @@ export const createGameSession = async (sessionData) => {
 
 export const checkSessionAccessCode = async (sessionId, accessCode) => {
 
-    console.log({ sessionId, accessCode });
     const response =  await apiFetch(`/gamesession/${sessionId}/check-code`, {
         method: 'POST',
         headers: {

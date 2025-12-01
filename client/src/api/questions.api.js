@@ -52,7 +52,7 @@ export const getQuestionById = async (id) => {
 };
 
 export const getRandomQuestion = async (query) => {
-    const response =  await apiFetch(`/question/random/${query}`, {
+    const response =  await apiFetch(`/question/random${query}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

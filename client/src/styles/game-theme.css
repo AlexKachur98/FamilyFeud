@@ -90,26 +90,28 @@
 }
 
 .game_theme .cancel-button {
-  background: linear-gradient(180deg, #e5e7eb 0%, #595e67 100%);
-  border: none;
-  color: #f8fafc;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
   box-shadow: 
-    0 4px 15px rgba(99, 102, 107, 0.25),
-    0 0 20px rgba(99, 102, 107, 0.12);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+    0 4px 15px rgba(59, 130, 246, 0.4),
+    0 0 20px rgba(59, 130, 246, 0.2) !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
 }
 
 .game_theme .cancel-button:hover {
-  transform: translateY(-2px);
+  transform: translateY(-2px) !important;
   box-shadow: 
-    0 4px 15px rgba(99, 102, 107, 0.45),
-    0 0 20px rgba(99, 102, 107, 0.22);
-  background: linear-gradient(180deg, #e5e7eb 0%, #666a72 100%);
+    0 6px 20px rgba(59, 130, 246, 0.6),
+    0 0 30px rgba(59, 130, 246, 0.3) !important;
+  background: linear-gradient(180deg, #2563eb 0%, #1e40af 100%) !important;
 }
 
 .game_theme .popup-backdrop {
@@ -812,6 +814,35 @@ button[type="submit"]:hover,
   box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3) !important;
 }
 
+/* Dashboard page specific styles */
+
+/* Dashboard Quick Actions buttons */
+.game_theme .action-grid button {
+  background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  box-shadow: 
+    0 4px 15px rgba(59, 130, 246, 0.4),
+    0 0 20px rgba(59, 130, 246, 0.2) !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+  padding: 16px 24px !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+}
+
+.game_theme .action-grid button:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 
+    0 8px 25px rgba(59, 130, 246, 0.6),
+    0 0 30px rgba(59, 130, 246, 0.3) !important;
+  background: linear-gradient(180deg, #2563eb 0%, #1e40af 100%) !important;
+}
+
 /* Questions page specific styles */
 
 /* Answer list styling */
@@ -870,37 +901,6 @@ button[type="submit"]:hover,
   margin: 1.5rem 0 !important;
   padding: 0 !important;
   width: 100% !important;
-}
-
-/* Apply the neon glow to all question set buttons */
-.game_theme .questions-page button.secondary-button,
-.game_theme .questions-page button.reset-button,
-.game_theme .questions-page button.primary-button {
-  background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%) !important;
-  border: none !important;
-  color: white !important;
-  font-weight: 600 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  box-shadow: 
-    0 4px 15px rgba(59, 130, 246, 0.4),
-    0 0 20px rgba(59, 130, 246, 0.2) !important;
-  transition: all 0.3s ease !important;
-  position: relative !important;
-  overflow: hidden !important;
-  min-height: 44px !important;
-  min-width: 180px !important;
-  padding: 12px 32px !important;
-  border-radius: 8px !important;
-}
-
-.game_theme .questions-page button.secondary-button:hover,
-.game_theme .questions-page button.reset-button:hover,
-.game_theme .questions-page button.primary-button:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 
-    0 6px 20px rgba(59, 130, 246, 0.6),
-    0 0 30px rgba(59, 130, 246, 0.3) !important;
 }
 
 .game_theme .questions-page textarea,

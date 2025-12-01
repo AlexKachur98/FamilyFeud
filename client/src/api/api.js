@@ -39,7 +39,7 @@ export const questions = {
     if (options.maxAnswers) params.set('maxAnswers', options.maxAnswers);
     if (options.round) params.set('round', options.round);
     const query = params.toString() ? `?${params.toString()}` : '';
-    return apiFetch(`/question/random/${query}`, { method: 'GET' });
+    return apiFetch(`/question/random${query}`, { method: 'GET' });
   },
   getById: (id) => apiFetch(`/question/all/${id}`, { method: 'GET' })
 };

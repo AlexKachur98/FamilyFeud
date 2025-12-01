@@ -13,7 +13,6 @@ const ProtectedAdminRoute = () => {
         
         return <Outlet />;
     }
-
-};
+}; 
 
 export default ProtectedAdminRoute;

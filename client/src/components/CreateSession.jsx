@@ -8,7 +8,7 @@
 import { createGameSession } from "../api/sessions.api";
 import { useAuth } from "./auth/AuthContext";
 import PageSection from "./PageSection";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 
 export default function CreateSession({ onConfirm, onCancel }) {
@@ -52,7 +52,6 @@ export default function CreateSession({ onConfirm, onCancel }) {
         setStatus(defaultStatus);
     }
 
-    const isSubmitting = status.state === 'loading';
     
     return (
         <div className="popup-backdrop" onClick={(e) => e.stopPropagation()}>
