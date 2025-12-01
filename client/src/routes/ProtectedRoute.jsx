@@ -2,7 +2,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../components/auth/AuthContext";
 
 const ProtectedRoute = () => {
-   const { isLoading, user } = useAuth();
+    const { isLoading, user } = useAuth();
 
     if (!isLoading) {
         // If no user is logged in, redirect to sign-in
@@ -10,6 +10,6 @@ const ProtectedRoute = () => {
         
         return <Outlet />;
     }
-};
+}; 
 
 export default ProtectedRoute;

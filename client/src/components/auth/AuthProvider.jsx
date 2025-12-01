@@ -12,7 +12,7 @@ export default function AuthProvider({ children }) {
 
 
   useEffect(() => {
-    const checkSession = async () => {
+   const checkSession = async () => {
       try {
         const
           res = await auth.validate(),
