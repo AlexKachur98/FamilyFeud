@@ -6,7 +6,7 @@ import SignIn from '../pages/SignIn';
 
 const mockNavigate = jest.fn();
 
-// This lets us assert that successful register redirects home.
+// This lets us assert that successful login redirects home.
 jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate
 }));
