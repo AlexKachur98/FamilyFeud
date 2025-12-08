@@ -23,13 +23,31 @@ export default function SignUp() {
     setFormData({ ...formData, [name]: value });
   };
 
+  const validateForm = (data) => {
+    if (!data.username.trim() || !data.email.trim() || !data.password || !data.confirmPassword) {
+      return 'All Fields Must Be Completed.';
+    }
+    if (data.username.length < 3 || data.username.length > 30) {
+      return 'Username Must Be Between 3 and 30 Characters.';
+    }
+    if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+      return 'Invalid Email Address.';
+    }
+    if (data.password !== data.confirmPassword) {
+      return 'Passwords Do Not Match.';
+    }
+    if (data.password.length < 6) {
+      return 'Password Must Be At Least 6 Characters.';
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      setStatus({ state: 'error', message: 'Passwords must match before submitting.' });
+    const validationError = validateForm(formData);
+    if (validationError) {
+      setStatus({ state: 'error', message: validationError });
       return;
-    };
-
+    }
     setStatus({ state: 'loading', message: 'Submitting access request…' });
 
     try {
