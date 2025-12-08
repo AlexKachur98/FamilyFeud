@@ -12,7 +12,6 @@ export default function Sessions() {
 
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [questionSets, setQuestionSets] = useState([]);
 
   const [showCreatePopup, setShowCreatePopup] = useState(false);
 
@@ -20,24 +19,6 @@ export default function Sessions() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch question sets for reference (non-critical)
-        try {
-          const setsResponse = await apiFetch('/question-sets', {
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-          });
-
-          if (setsResponse.ok) {
-            const setsData = await setsResponse.json();
-            setQuestionSets(setsData);
-          } else {
-            console.warn('Question sets fetch warning:', await setsResponse.text());
-          }
-        } catch (setsErr) {
-          console.error('Question sets fetch error:', setsErr);
-          // Continue without question sets
-        }
-
         // Fetch sessions (non-critical)
         try {
           const sessionsResponse = await apiFetch('/gamesession', {
@@ -88,12 +69,6 @@ export default function Sessions() {
     }
   };
 
-  const getQuestionSetTitle = (setId) => {
-    if (!setId) return 'None';
-    const foundSet = questionSets.find(set => set._id === setId);
-    return foundSet ? foundSet.title : 'Unknown Set';
-  };
-
   return (
     <div className="game_theme">
 
@@ -127,14 +102,12 @@ export default function Sessions() {
               {
                 loading ? <p>Loading sessions...</p>
                 : sessions.map((session) => {
-                  const questionSetTitle = getQuestionSetTitle(session.questionSetId);
 
                   return (
                     <article key={session.id} className="session-card">
                       <header className="session-card__header">
                         <div>
                           <p className="session-card__code">Code: {session.id}</p>
-                          <h3>{questionSetTitle}</h3>
                         </div>
                         <span className={`session-card__status status-${session.status}`}>
                           {session.status}

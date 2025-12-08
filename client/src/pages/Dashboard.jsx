@@ -25,33 +25,6 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch question sets (non-critical - can fail gracefully)
-        try {
-          const setsResponse = await apiFetch('/question-sets', {
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-          });
-
-          let setsData = [];
-          if (setsResponse.ok) {
-            setsData = await setsResponse.json();
-          } else {
-            console.warn('Question sets fetch warning:', await setsResponse.text());
-          }
-
-          // Calculate stats safely
-          const calculatedStats = {
-            totalSets: setsData.length,
-            doubleTriple: setsData.filter(set => set.roundType !== 'single').length,
-            holiday: setsData.filter(set => set.tags?.includes('holiday')).length,
-            totalQuestions: totalQuestionCount
-          };
-          setStats(calculatedStats);
-        } catch (setsErr) {
-          console.error('Question sets fetch error:', setsErr);
-          // We'll still show the dashboard, just with empty question sets
-        }
-
         // Fetch sessions (also non-critical)
         try {
           const sessionsResponse = await apiFetch('/gamesession', {
