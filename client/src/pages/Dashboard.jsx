@@ -12,7 +12,6 @@ export default function Dashboard() {
 
   const { totalQuestionCount } = useQuestions();
 
-  const [questionSets, setQuestionSets] = useState([]);
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
@@ -48,7 +47,6 @@ export default function Dashboard() {
             totalQuestions: totalQuestionCount
           };
           setStats(calculatedStats);
-          setQuestionSets(setsData);
         } catch (setsErr) {
           console.error('Question sets fetch error:', setsErr);
           // We'll still show the dashboard, just with empty question sets
@@ -124,56 +122,6 @@ export default function Dashboard() {
               <strong>{stats.totalQuestions}</strong>
             </article>
           </div>
-        </PageSection>
-
-        <PageSection
-          title="Question Sets"
-          description="Manage your question sets."
-          actions={questionSets.length === 0 ? null : <button type="button" className='primary-button' onClick={() => navigate('/question-sets/create')}>Create New Set</button>}
-        >
-          {questionSets.length === 0 ? (
-            <div className="empty-state">
-              <p>No question sets found.</p>
-              <p>Create your first question set to organize your game content.</p>
-              <button
-                type="button"
-                className="primary-button"
-                onClick={() => navigate('/question-sets/create')}
-              >
-                Create First Question Set
-              </button>
-            </div>
-          ) : (
-            <div className="table-placeholder">
-              <div className="table-placeholder__row table-placeholder__row--head">
-                <span>Title</span>
-                <span>Round Type</span>
-                <span>Questions</span>
-                <span>Tags</span>
-                <span>Actions</span>
-              </div>
-              {
-                loading ? <div className="loading-message">Loading question sets...</div>
-                : questionSets.map((set) => (
-                  <div key={set._id} className="table-placeholder__row">
-                    <span>{set.title}</span>
-                    <span>{set.roundType}</span>
-                    <span>{set.questions?.length || 0}</span>
-                    <span>{set.tags?.join(', ') || 'None'}</span>
-                    <span>
-                      <button
-                        type="button"
-                        className="link-button"
-                        onClick={() => navigate(`/question-sets/${set._id}`)}
-                      >
-                        View
-                      </button>
-                    </span>
-                  </div>
-                ))
-              }
-            </div>
-          )}
         </PageSection>
 
         <PageSection

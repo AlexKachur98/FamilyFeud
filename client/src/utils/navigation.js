@@ -29,11 +29,6 @@ export const NAV_USER_ITEMS = [
     description: 'View the rankings of all teams.',
   },
   {
-    path: '/question-sets',
-    label: 'Question Sets',
-    description: 'Create, edit, and curate survey banks for upcoming matches.',
-  },
-  {
     path: "/profile",
     label: "Profile",
     description: "View and update account details.",
