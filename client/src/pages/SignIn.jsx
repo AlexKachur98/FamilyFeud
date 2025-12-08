@@ -62,7 +62,7 @@ export default function SignIn() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="alex@familyfeud.ca"
+                placeholder="user@familyfeud.ca"
                 autoComplete="email"
                 required
                 disabled={isSubmitting}
