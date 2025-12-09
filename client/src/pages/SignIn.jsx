@@ -32,7 +32,7 @@ export default function SignIn() {
     try {
       const { success, message } = await signIn(formData.email, formData.password);
 
-      if (success) navigate('/dashboard');
+      if (success) navigate('/leaderboard');
       else setStatus({ state: 'error', message: message || 'SignIn Error…' });
     }
     catch (error) {

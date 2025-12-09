@@ -14,16 +14,6 @@ export const HOME_NAV_ITEM = {
 
 export const NAV_USER_ITEMS = [
   {
-    path: '/dashboard',
-    label: 'Dashboard',
-    description: 'Control surface for hosts with quick stats and active sessions.',
-  },
-  {
-    path: '/sessions',
-    label: 'Sessions',
-    description: 'Monitor in-progress games, manage teams, and launch rounds.',
-  },
-  {
     path: '/leaderboard',
     label: 'Leaderboard',
     description: 'View the rankings of all teams.',
@@ -45,16 +35,14 @@ export const NAV_ADMIN_ITEMS = [
     path: '/questions',
     label: 'Questions',
     description: 'Manage survey questions for Family Feud rounds.',
-  },
+  }
+];
+
+export const NAV_PUBLIC_ITEMS = [
   {
-    path: '/join/0',
-    label: 'Player Join',
-    description: 'Entry point for contestants to join matches using an access code.',
-  },
-  {
-    path: '/game-board/0',
-    label: 'Game Board',
-    description: 'Preview the live board layout with placeholder slots.',
+    path: '/lobby',
+    label: 'Play Game',
+    description: 'Join or host a Family Feud game session.',
   }
 ];
 
@@ -71,15 +59,15 @@ export const AUTH_NAV_ITEMS = [
     },
 ];
 
-export const PRIMARY_AUTH_NAV_LINKS = [HOME_NAV_ITEM, ...AUTH_NAV_ITEMS];
-export const PRIMARY_USER_NAV_LINKS = [HOME_NAV_ITEM, ...NAV_USER_ITEMS];
-export const PRIMARY_ADMIN_NAV_LINKS = [...NAV_ADMIN_ITEMS, ...AUTH_NAV_ITEMS];
+export const PRIMARY_AUTH_NAV_LINKS = [HOME_NAV_ITEM, ...NAV_PUBLIC_ITEMS, ...AUTH_NAV_ITEMS];
+export const PRIMARY_USER_NAV_LINKS = [HOME_NAV_ITEM, ...NAV_PUBLIC_ITEMS, ...NAV_USER_ITEMS];
+export const PRIMARY_ADMIN_NAV_LINKS = [...NAV_ADMIN_ITEMS];
 
 /**
- * Returns user-specific navigation items to render as cards on the dashboard.
- * @returns {Array} User dashboard navigation items (excluding the home overview card).
+ * Returns user-specific navigation items.
+ * @returns {Array} User navigation items.
  */
-export function getUserDashboardCards() {
+export function getUserNavCards() {
     return NAV_USER_ITEMS;
 }
 

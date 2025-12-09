@@ -22,6 +22,11 @@ export default defineConfig(({ command }) => {
             ? 'http://localhost:3000'
             : 'https://familyfeud-server.onrender.com',
           changeOrigin: true
+        },
+        // Colyseus monitor panel proxy
+        '/colyseus': {
+          target: 'http://localhost:3000',
+          changeOrigin: true
         }
       }
     }

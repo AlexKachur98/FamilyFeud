@@ -1,350 +1,355 @@
 /**
  * @file GameBoard.jsx
- * @author Alex Kachur
- * @since 2025-11-11
- * @purpose Interactive Family Feud board prototype that now delegates game logic to the gameplay engine.
+ * @description Professional Family Feud game board - Big Screen / Spectator view
+ * Display-only view optimized for presentation on a TV or projector
+ * Game controls are in the admin hamburger menu
  */
-import { useEffect, useMemo, useState } from 'react';
-
-import { io } from 'socket.io-client';
-
-import { useAuth } from '../components/auth/AuthContext.js';
-import useGameBoardEngine from '../gameplay/useGameBoardEngine.js';
-
-import {
-  ANSWER_CARD_ASSET,
-  ANSWERING_PHASES,
-  DISPLAY_ORDER,
-  EMPTY_CARD_ASSET,
-  HIDDEN_CARD_ASSETS,
-  PLAYER_PLACEHOLDERS,
-  QUESTION_CARD_ASSET,
-  TIMER_CARD_ASSET,
-} from '../gameplay/gameBoardConstants.js';
-
-const SERVER_URL = import.meta.env.PROD ? (import.meta.env.VITE_SERVER_URL || '') : (import.meta.env.VITE_LOCAL_URL || '');
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useGame } from '../context/game.context';
+import '../styles/game-board.css';
 
 export default function GameBoard() {
+    const navigate = useNavigate();
+    const {
+        isConnected,
+        phase,
+        questionText,
+        message,
+        teams,
+        players,
+        answers,
+        controllingTeam,
+        currentRound,
+        pointMultiplier,
+        strikes,
+        pointsOnBoard,
+        buzzer,
+        winningTeam,
+        fastMoney,
+        fastMoneyQuestions,
+        fastMoneyAnswers,
+        leaveGame,
+        // Face-off state
+        awaitingPlayOrPass,
+        faceoffWinner
+    } = useGame();
 
-  const { user } = useAuth();
+    const [showStrike, setShowStrike] = useState(false);
+    const [lastStrikeCount, setLastStrikeCount] = useState(0);
 
-  const [menuOpen, setMenuOpen] = useState(false);
-  const toggleMenu = () => setMenuOpen((value) => !value);
-  const closeMenu = () => setMenuOpen(false);
+    // Redirect if not connected
+    useEffect(() => {
+        if (!isConnected) {
+            navigate('/lobby');
+        }
+    }, [isConnected, navigate]);
 
-  // WebSocket instance
-  // TODO: 
-  const roomId = "demo-room-id"; // Replace with actual room ID
+    // Redirect to lobby if game returns to lobby phase
+    useEffect(() => {
+        if (phase === 'lobby') {
+            navigate('/lobby');
+        }
+    }, [phase, navigate]);
 
-  const [connectedUsers, setConnectedUsers] = useState({});
+    // Strike animation effect
+    useEffect(() => {
+        if (strikes > lastStrikeCount) {
+            setShowStrike(true);
+            setTimeout(() => setShowStrike(false), 800);
+        }
+        setLastStrikeCount(strikes);
+    }, [strikes, lastStrikeCount]);
 
-  let websocket;
+    const handleLeave = () => {
+        leaveGame();
+        navigate('/');
+    };
 
-  useEffect(() => {
-    websocket = io(SERVER_URL);
+    const getPhaseTitle = () => {
+        switch (phase) {
+            case 'faceoff': return 'FACE OFF';
+            case 'play': return 'SURVEY SAYS...';
+            case 'steal': return 'STEAL!';
+            case 'roundEnd': return 'ROUND COMPLETE';
+            case 'fastMoney': return 'FAST MONEY';
+            case 'gameOver': return 'GAME OVER';
+            default: return 'FAMILY FEUD';
+        }
+    };
 
-    websocket.on('connect', () => {
-      console.log('Connected to WebSocket server with ID:', websocket.id);
-    });
+    const getRoundLabel = () => {
+        if (phase === 'fastMoney') return 'BONUS ROUND';
+        if (!currentRound) return '';
+        const labels = ['', 'ROUND ONE', 'ROUND TWO', 'DOUBLE POINTS', 'TRIPLE POINTS'];
+        return labels[currentRound] || `ROUND ${currentRound}`;
+    };
 
-    if (user) websocket.emit('joinRoom', roomId, user, (res, resUser) => {
-      console.log(res);
-      setConnectedUsers((prevUsers) => ({ ...prevUsers, [resUser._id]: resUser }));
-    });
-  }, []);
+    // Fast Money state
+    const playersSelected = fastMoney?.player1Id && fastMoney?.player2Id;
+    const fmPlayer1 = players.find(p => p.sessionId === fastMoney?.player1Id);
+    const fmPlayer2 = players.find(p => p.sessionId === fastMoney?.player2Id);
+    const fmCurrentPlayer = fastMoney?.currentPlayer || 1;
+    const fmTimerSeconds = fastMoney?.timerSeconds || 0;
+    const fmP1Total = fastMoney?.player1Total || 0;
+    const fmP2Total = fastMoney?.player2Total || 0;
+    const fmTotal = fmP1Total + fmP2Total;
 
-  // Above is for Websocket testing purposes only.
-
-  const players = useMemo(() => {
-    if (!user) return PLAYER_PLACEHOLDERS;
-    // TODO: Replace default avatar with user-provided image when backend exposes it.
-    return [
-      {
-        ...PLAYER_PLACEHOLDERS[0],
-        playerName: user.username || PLAYER_PLACEHOLDERS[0].playerName,
-        avatar: PLAYER_PLACEHOLDERS[0].avatar,
-      },
-      ...PLAYER_PLACEHOLDERS.slice(1),
-    ];
-  }, [user]);
-
-  const {
-    currentRound,
-    roundStatus,
-    gridAnswers,
-    revealedAnswers,
-    phase,
-    activePlayerIndex,
-    controlPlayer,
-    roundPot,
-    strikes,
-    scores,
-    guess,
-    feedback,
-    roundResult,
-    timerLabel,
-    timerDisplay,
-    timerIsCritical,
-    activeInstruction,
-    formPlaceholder,
-    showPlayOrPassActions,
-    showRoundAdvanceAction,
-    roundOverlayAsset,
-    isCheckingAnswer,
-    inputRef,
-    setGuess,
-    handleGuessSubmit,
-    handleControlChoice,
-    advanceRound,
-    reloadRound,
-  } = useGameBoardEngine(players);
-  const [statusDismissed, setStatusDismissed] = useState(false);
-  const strikesDisplay = useMemo(
-    () => Array.from({ length: 3 }, (_, index) => <span key={index} className={index < strikes ? 'is-hit' : ''}>X</span>),
-    [strikes]
-  );
-  // Prefer backend prompt text, but fall back to status to keep the UI informative.
-  const questionText = useMemo(
-    () => currentRound?.question ?? (roundStatus.state === 'loading'
-      ? roundStatus.message || 'Loading question…'
-      : roundStatus.message || 'Question unavailable'
-    ),
-    [currentRound, roundStatus]
-  );
-  const roundLabel = currentRound?.label ?? 'Round';
-  const roundMultiplier = currentRound?.multiplier ?? 1;
-
-
-  useEffect(() => {
-    if (roundStatus.state !== 'error') setStatusDismissed(false);
-  }, [roundStatus.state]);
-
-  return (
-    <div className="landing-basic game-board">
-
-      <main className="landing-basic__body game-board__body">
-
-        {/* This is for websocket testing purposes only. */}
-        <div style={{ backgroundColor: 'black', padding: '15px', color: 'white', position: 'absolute', top: '10px', right: '10px', zIndex: 1000, fontSize: '12px' }}>
-          <h2>Connected Users</h2>
-          <ul>
-            {Object.values(connectedUsers).map((connUser) => (
-              <li key={connUser._id}>{connUser.username} (ID: {connUser._id})</li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="game-board__stage">
-
-          <img
-            src="/Gameboard_Backround.jpg"
-            alt="Family Feud stage backdrop"
-            className="game-board__bg"
-            // loading="lazy"
-          />
-
-          {phase === 'intro' && roundStatus.state === 'idle' ? (
-            <div className="game-board-round-intro" aria-label="Round intro">
-              <div className="game-board-round-intro__logo">
-                <img src={roundOverlayAsset} alt="Round splash" />
-                <span>{roundLabel}</span>
-              </div>
-            </div>
-          ) : null}
-
-          {roundStatus.state === 'loading' ? (
-            <div className="game-board-round-status" aria-live="polite">
-              <p>{roundStatus.message || 'Loading question…'}</p>
-            </div>
-          ) : null}
-
-          {roundStatus.state === 'error' && !statusDismissed ? (
-            <div className="game-board-round-error" aria-live="assertive">
-              <p>{roundStatus.message || 'Unable to load question.'}</p>
-              <button type="button" onClick={reloadRound}>
-                Retry Question
-              </button>
-              <button type="button" onClick={() => setStatusDismissed(true)}>
-                Dismiss
-              </button>
-            </div>
-          ) : null}
-
-          {roundStatus.state === 'idle' && (phase === 'questionZoom' || phase === 'faceoffBuzz') ? (
-            <div className="game-board-question-overlay" aria-live="polite">
-              <div
-                className="game-board-question-overlay__card"
-                style={{ backgroundImage: `url(${QUESTION_CARD_ASSET})` }}
-              >
-                <p>{questionText}</p>
-              </div>
-              <span>Buzz with spacebar</span>
-            </div>
-          ) : null}
-
-          <div className="game-board__content">
-            <div
-              className="game-board-question"
-              aria-label="Question plaque"
-              style={{ backgroundImage: `url(${QUESTION_CARD_ASSET})` }}
-            >
-              <p className="game-board-question__text">{questionText}</p>
-            </div>
-
-            <div className="game-board-info-row">
-              <div className="game-board-round-meta">
-                <div className="game-board-round-meta__item">{roundLabel}</div>
-                <div className="game-board-round-meta__item">
-                  Pot: {roundPot} pts · x{roundMultiplier}
+    if (!isConnected) {
+        return (
+            <div className="game-board">
+                <div className="game-board__loading">
+                    <div className="game-board__loading-spinner"></div>
+                    <p>Connecting...</p>
                 </div>
-              </div>
+            </div>
+        );
+    }
 
-              <div
-                className={`game-board-timer${timerIsCritical ? ' game-board-timer--critical' : ''}`}
-                aria-label="Timer plaque"
-                style={{ backgroundImage: `url(${TIMER_CARD_ASSET})` }}
-              >
-                <span className="game-board-timer__label">{timerLabel}</span>
-                <span className="game-board-timer__value">{timerDisplay}</span>
-              </div>
-
-              <div className="game-board-round-meta game-board-round-meta--right">
-                <div className="game-board-round-meta__item game-board-strikes">
-                  Strikes: {strikesDisplay}
+    return (
+        <div className="game-board game-board--display">
+            {/* Strike Overlay Animation */}
+            {showStrike && (
+                <div className="game-board__strike-overlay">
+                    <span className="game-board__strike-x">✕</span>
                 </div>
-                {controlPlayer !== null ? (
-                  <div className="game-board-round-meta__item game-board-control-tag">
-                    Control:{' '}
-                    {players[controlPlayer]?.label ?? PLAYER_PLACEHOLDERS[controlPlayer]?.label ?? 'Team'}
-                  </div>
-                ) : null}
-              </div>
+            )}
+
+            {/* Background Effects */}
+            <div className="game-board__bg">
+                <div className="game-board__bg-gradient"></div>
+                <div className="game-board__bg-pattern"></div>
+                <div className="game-board__spotlight game-board__spotlight--1"></div>
+                <div className="game-board__spotlight game-board__spotlight--2"></div>
             </div>
 
-            <div className="game-board-board">
-              {/* Grid renders in broadcast order so assets line up with the TV layout. */}
-              <section className="game-board-grid" aria-label="Answer card placeholders">
-                {DISPLAY_ORDER.map((slotIndex) => {
-                  const slot = gridAnswers[slotIndex];
-                  const slotState = revealedAnswers[slotIndex];
-                  let cardAsset = EMPTY_CARD_ASSET;
-                  if (slot) {
-                    cardAsset =
-                      slotState === true
-                        ? ANSWER_CARD_ASSET
-                        : HIDDEN_CARD_ASSETS[slotIndex] ?? EMPTY_CARD_ASSET;
-                  }
-                  const revealed = slot && slotState === true;
-                  return (
-                    <div
-                      key={slotIndex}
-                      className={`game-board-grid__slot${revealed ? ' game-board-grid__slot--revealed' : ''}${slotState === 'empty' ? ' game-board-grid__slot--empty' : ''
-                        }`}
-                      style={{ backgroundImage: `url(${cardAsset})` }}
-                    >
-                      {revealed ? (
-                        <div className="game-board-grid__slot-text">
-                          <span className="game-board-grid__slot-rank">{slot.rank}</span>
-                          <span className="game-board-grid__slot-answer">{slot.answer}</span>
-                          <span className="game-board-grid__slot-points">{slot.points ?? 0}</span>
+            {/* Header */}
+            <header className="game-board__header">
+                <div className="game-board__round-badge">
+                    {getRoundLabel()}
+                    {pointMultiplier > 1 && <span className="game-board__multiplier">{pointMultiplier}×</span>}
+                </div>
+                <h1 className="game-board__title">{getPhaseTitle()}</h1>
+                <div className="game-board__host-badge">
+                    BIG SCREEN
+                </div>
+            </header>
+
+            {/* Scoreboard */}
+            <div className="game-board__scoreboard">
+                <div className={`game-board__team-score game-board__team-score--1 ${controllingTeam === 'team1' ? 'has-control' : ''}`}>
+                    <div className="game-board__team-name">{teams.team1?.name || 'Team 1'}</div>
+                    <div className="game-board__score">{teams.team1?.totalScore || 0}</div>
+                    {controllingTeam === 'team1' && <div className="game-board__control-indicator">IN CONTROL</div>}
+                </div>
+
+                <div className="game-board__points-center">
+                    <div className="game-board__points-label">POINTS</div>
+                    <div className="game-board__points-value">{pointsOnBoard || 0}</div>
+                </div>
+
+                <div className={`game-board__team-score game-board__team-score--2 ${controllingTeam === 'team2' ? 'has-control' : ''}`}>
+                    <div className="game-board__team-name">{teams.team2?.name || 'Team 2'}</div>
+                    <div className="game-board__score">{teams.team2?.totalScore || 0}</div>
+                    {controllingTeam === 'team2' && <div className="game-board__control-indicator">IN CONTROL</div>}
+                </div>
+            </div>
+
+            {/* Question Display */}
+            {questionText && phase !== 'gameOver' && phase !== 'fastMoney' && (
+                <div className="game-board__question">
+                    <div className="game-board__question-text">{questionText}</div>
+                </div>
+            )}
+
+            {/* Message Display */}
+            {message && (
+                <div className="game-board__message">
+                    {message}
+                </div>
+            )}
+
+            {/* Main Content Area */}
+            <main className="game-board__main">
+                {/* Game Over Display */}
+                {phase === 'gameOver' && (
+                    <div className="game-board__game-over">
+                        <div className="game-board__winner-announcement">
+                            {winningTeam ? (
+                                <>
+                                    <div className="game-board__confetti"></div>
+                                    <h2 className="game-board__winner-title">
+                                        {teams[winningTeam]?.name}
+                                    </h2>
+                                    <div className="game-board__winner-subtitle">WINS!</div>
+                                    <div className="game-board__winner-score">
+                                        {teams[winningTeam]?.totalScore} POINTS
+                                    </div>
+                                </>
+                            ) : (
+                                <h2 className="game-board__winner-title">IT'S A TIE!</h2>
+                            )}
                         </div>
-                      ) : null}
+                        <div className="game-board__final-scores">
+                            <div className={`game-board__final-team ${winningTeam === 'team1' ? 'winner' : ''}`}>
+                                <span className="name">{teams.team1?.name}</span>
+                                <span className="score">{teams.team1?.totalScore}</span>
+                            </div>
+                            <div className="game-board__final-vs">VS</div>
+                            <div className={`game-board__final-team ${winningTeam === 'team2' ? 'winner' : ''}`}>
+                                <span className="name">{teams.team2?.name}</span>
+                                <span className="score">{teams.team2?.totalScore}</span>
+                            </div>
+                        </div>
                     </div>
-                  );
-                })}
-              </section>
+                )}
 
-              <div className="game-board-sides" aria-label="Player placeholders">
-                {players.map((player, index) => {
-                  const isActive = index === activePlayerIndex;
-                  const hasControl = controlPlayer === index;
-                  const showPlayControlsForPlayer = showPlayOrPassActions && hasControl;
-                  const winnerIndex = roundResult?.winnerIndex;
-                  const showAdvanceForPlayer =
-                    showRoundAdvanceAction &&
-                    (winnerIndex === index || (winnerIndex === null || winnerIndex === undefined ? hasControl : false));
+                {/* Fast Money Display */}
+                {phase === 'fastMoney' && (
+                    <div className="game-board__fast-money">
+                        {!playersSelected ? (
+                            <div className="game-board__fm-waiting">
+                                <h3>Fast Money</h3>
+                                <p>Waiting for admin to select players...</p>
+                            </div>
+                        ) : (
+                            <div className="game-board__fm-board">
+                                <div className="game-board__fm-header">
+                                    <div className={`game-board__fm-player ${fmCurrentPlayer === 1 ? 'active' : ''}`}>
+                                        <span className="name">{fmPlayer1?.name || 'Player 1'}</span>
+                                        <span className="score">{fmP1Total}</span>
+                                    </div>
+                                    <div className="game-board__fm-total">
+                                        <span className="label">TOTAL</span>
+                                        <span className={`value ${fmTotal >= 200 ? 'winner' : ''}`}>{fmTotal}</span>
+                                        <span className="goal">Goal: 200</span>
+                                    </div>
+                                    <div className={`game-board__fm-player ${fmCurrentPlayer === 2 ? 'active' : ''}`}>
+                                        <span className="name">{fmPlayer2?.name || 'Player 2'}</span>
+                                        <span className="score">{fmP2Total}</span>
+                                    </div>
+                                </div>
 
-                  let playerMessage = '\u00A0';
-                  if (isActive && feedback) {
-                    playerMessage = feedback;
-                  } else if (!isActive && (phase === 'faceoffBuzz' || phase === 'questionZoom')) {
-                    playerMessage = 'Buzz with spacebar';
-                  } else if (showPlayControlsForPlayer) {
-                    playerMessage = 'Choose play or pass';
-                  } else if (showAdvanceForPlayer) {
-                    playerMessage = phase === 'gameComplete' ? 'Restart the game' : 'Advance to next round';
-                  } else if (isActive) {
-                    playerMessage = activeInstruction;
-                  }
+                                <div className="game-board__fm-timer">
+                                    <span className={fmTimerSeconds <= 5 ? 'critical' : ''}>{fmTimerSeconds}s</span>
+                                </div>
 
-                  return (
-                    <div
-                      className={`game-board-player${isActive ? ' game-board-player--active' : ''}`}
-                      key={player.label}
-                    >
-                      <p className="game-board-player__team">{player.label}</p>
-                      <p className="game-board-player__name">{player.playerName}</p>
-                      <p className="game-board-player__status" aria-live={isActive ? 'polite' : undefined}>
-                        {playerMessage}
-                      </p>
-                      <div className="game-board-player__avatar" style={{ backgroundImage: `url(${player.avatar})` }} />
-                      <div className="game-board-player__score" style={{ backgroundImage: `url(${player.scoreCard})` }}>
-                        <span>{String(scores[index]).padStart(3, '0')}</span>
-                      </div>
-                      {showPlayControlsForPlayer ? (
-                        <div className="game-board-player__actions">
-                          <button type="button" onClick={() => handleControlChoice('play')}>
-                            Play it
-                          </button>
-                          <button type="button" onClick={() => handleControlChoice('pass')}>
-                            Pass it
-                          </button>
-                        </div>
-                      ) : null}
-                      {showAdvanceForPlayer ? (
-                        <div className="game-board-player__actions">
-                          <button type="button" onClick={advanceRound}>
-                            {phase === 'gameComplete' ? 'Restart game' : 'Next round'}
-                          </button>
-                        </div>
-                      ) : null}
+                                <div className="game-board__fm-grid">
+                                    {fastMoneyQuestions.map((q, idx) => {
+                                        const p1Answer = fastMoneyAnswers.player1.find(a => a.questionIndex === idx);
+                                        const p2Answer = fastMoneyAnswers.player2.find(a => a.questionIndex === idx);
+                                        return (
+                                            <div key={idx} className="game-board__fm-row">
+                                                <div className="game-board__fm-question">{idx + 1}. {q.text}</div>
+                                                <div className={`game-board__fm-answer ${p1Answer?.revealed ? 'revealed' : ''}`}>
+                                                    {p1Answer?.revealed ? (
+                                                        <>
+                                                            <span className="text">{p1Answer.answer || '---'}</span>
+                                                            <span className="points">{p1Answer.points}</span>
+                                                        </>
+                                                    ) : (
+                                                        <span className="pending">---</span>
+                                                    )}
+                                                </div>
+                                                <div className={`game-board__fm-answer ${p2Answer?.revealed ? 'revealed' : ''}`}>
+                                                    {p2Answer?.revealed ? (
+                                                        <>
+                                                            <span className="text">{p2Answer.answer || '---'}</span>
+                                                            <span className="points">{p2Answer.points}</span>
+                                                        </>
+                                                    ) : (
+                                                        <span className="pending">---</span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
                     </div>
-                  );
-                })}
-              </div>
-            </div>
+                )}
 
-            <div className="game-board-console" aria-live="polite">
-              <div className="game-board-input" aria-label="Answer input placeholder">
-                <form className="game-board-answer-form" onSubmit={handleGuessSubmit}>
-                  <label className="sr-only" htmlFor="gameboard-guess">
-                    Enter guess
-                  </label>
-                  <input
-                    id="gameboard-guess"
-                    ref={inputRef}
-                    type="text"
-                    value={guess}
-                    onChange={(event) => setGuess(event.target.value)}
-                    placeholder={formPlaceholder}
-                    disabled={
-                      !ANSWERING_PHASES.has(phase) || roundStatus.state !== 'idle' || isCheckingAnswer
-                    }
-                  />
-                  <button
-                    type="submit"
-                    disabled={
-                      !ANSWERING_PHASES.has(phase) || roundStatus.state !== 'idle' || isCheckingAnswer
-                    }
-                  >
-                    Lock In
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
+                {/* Regular Game Display */}
+                {phase !== 'gameOver' && phase !== 'fastMoney' && (
+                    <div className="game-board__play-area">
+                        {/* Answer Board - Display only */}
+                        <div className="game-board__answer-board">
+                            {answers && answers.length > 0 ? (
+                                <div className="game-board__answers">
+                                    {answers.map((answer, index) => (
+                                        <div
+                                            key={index}
+                                            className={`game-board__answer-slot ${answer.revealed ? 'revealed' : ''}`}
+                                        >
+                                            <div className="game-board__answer-inner">
+                                                <div className="game-board__answer-front">
+                                                    <span className="game-board__answer-number">{index + 1}</span>
+                                                </div>
+                                                <div className="game-board__answer-back">
+                                                    <span className="game-board__answer-text">{answer.text}</span>
+                                                    <span className="game-board__answer-points">{answer.points}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="game-board__answers-loading">
+                                    Waiting for question...
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Strikes Display */}
+                        <div className="game-board__strikes">
+                            {[0, 1, 2].map((i) => (
+                                <div key={i} className={`game-board__strike ${i < strikes ? 'active' : ''}`}>
+                                    ✕
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Buzzer Status / Play or Pass */}
+                        {phase === 'faceoff' && (
+                            <div className="game-board__buzzer-status">
+                                {awaitingPlayOrPass ? (
+                                    <div className="game-board__play-pass-display">
+                                        <div className="game-board__play-pass-winner-large">
+                                            {players.find(p => p.sessionId === faceoffWinner)?.name} WINS FACE-OFF!
+                                        </div>
+                                        <div className="game-board__play-pass-team-large">
+                                            {teams[players.find(p => p.sessionId === faceoffWinner)?.teamId]?.name}
+                                        </div>
+                                        <div className="game-board__play-pass-prompt-large">
+                                            PLAY or PASS?
+                                        </div>
+                                    </div>
+                                ) : buzzer?.winnerId ? (
+                                    <div className="game-board__buzzer-winner">
+                                        {players.find(p => p.sessionId === buzzer.winnerId)?.name} BUZZED IN!
+                                    </div>
+                                ) : buzzer?.active ? (
+                                    <div className="game-board__buzzer-active">
+                                        <span className="pulse"></span>
+                                        BUZZER ACTIVE
+                                    </div>
+                                ) : null}
+                            </div>
+                        )}
+                    </div>
+                )}
+            </main>
+
+            {/* Footer - minimal leave button */}
+            <footer className="game-board__footer">
+                <button
+                    className="game-board__btn game-board__btn--ghost game-board__btn--small"
+                    onClick={handleLeave}
+                >
+                    Leave
+                </button>
+            </footer>
         </div>
-      </main>
-    </div>
-  );
-};
+    );
+}

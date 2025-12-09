@@ -1,5 +1,6 @@
 import 'dotenv/config';
 
+import http from 'http';
 import express from "express";
 import config from "./config/config.js";
 import mongoose from "mongoose";
@@ -9,9 +10,10 @@ import compress from "compression";
 import cors from "cors";
 import helmet from "helmet";
 
+import { initializeColyseus } from './colyseus/index.js';
+
 import rateLimit from './middlewares/rateLimiter.js'
 import apiRouter from './api-router.js';
-import initWebsocket from './sockets/websocket.js';
 
 try {
   try {
@@ -52,11 +54,13 @@ app
     res.json({ message: "Welcome to Family Feud!" });
   });
 
-const listeningPort = app.listen(config.port, (err) => {
+// Create HTTP server and attach Colyseus
+const httpServer = http.createServer(app);
+initializeColyseus(httpServer, app);
+
+httpServer.listen(config.port, (err) => {
   if (err) console.error(`Error starting server: ${err}`);
   config.env === 'development'
-    ? console.log(`Server running on http://localhost:${config.port}/`)
-    : console.log(`Server running on https://dailygrind-server.onrender.com`);
+    ? console.log(`Server + Colyseus running on http://localhost:${config.port}/`)
+    : console.log(`Server + Colyseus running on https://familyfeud-server.onrender.com`);
 });
-
-initWebsocket(listeningPort);

@@ -1,12 +1,13 @@
-# Family Feud – Front-End Skeleton
+# Family Feud – Front-End
 
 ## Overview
-React + Vite SPA that powers the host dashboard, question management, session control, contestant join, and full-screen game board experiences for the Family Feud project. The client now wires directly to the Express API for authentication, random question pulls, and AI-powered answer validation while placeholder utilities continue to unblock dashboard/session scaffolding.
+React + Vite SPA that powers the entire Family Feud game experience including the game lobby, player view, and admin controls. The client connects to the Express API for authentication and to **Colyseus.io for real-time multiplayer game state**.
 
 ## Tech Stack
-- React 19 with Vite 7
-- React Router 7 for nested routing
-- Plain CSS modules (`styles/index.css`) for baseline layout primitives
+- **React 19** with Vite 7
+- **React Router 7** for nested routing
+- **Colyseus.js** client for WebSocket game state sync
+- **CSS** - Custom styles with game-specific themes (`game-board.css`, `game-lobby.css`)
 
 ## Available Scripts
 ```bash
@@ -14,51 +15,69 @@ npm install                     # from repo root to install all workspaces
 npm start                       # runs client (Vite) + server (Express) concurrently
 npm run dev --prefix client     # front-end only (Vite on 5173)
 npm run build --prefix client   # production build
+npm run lint --prefix client    # lint client code
+npm test --prefix client        # run Jest tests
 ```
 
 ## Project Structure
 ```
 client/
   src/
-    components/      # Shared UI primitives (Layout, PageSection)
-    pages/           # Route-aligned views (dashboard, sessions, auth, etc.)
-    gameplay/        # Game board engine, constants, and helpers
-    utils/           # API client + placeholder data scaffolding for dashboard/session shells
-    styles/          # Baseline, un-themed CSS tokens
+    api/           # API client wrappers (auth, questions, leaderboard)
+    colyseus/      # Colyseus client, hooks, and game state management
+      client.js      # Colyseus client singleton
+      useColyseus.js # Room connection hook with reconnection support
+      useGameState.js # Parses Colyseus state for React components
+    components/    # Shared UI (Layout, Sidebar, auth providers)
+    context/       # React context providers
+      game.context.jsx # GameProvider - exposes game state & actions
+    pages/         # Route-aligned views
+      GameLobby.jsx  # Join/create room, team selection
+      PlayerView.jsx # Main game interface with buzzer & answers
+      GameBoard.jsx  # Host display view
+    routes/        # Protected route wrappers
+    styles/        # CSS including game-board.css, game-lobby.css
+    tests/         # Jest tests
+    utils/         # Navigation metadata and helpers
 ```
 
 ## Current Status
-- Host dashboard still surfaces placeholder metrics via `questionSets.js` and `gameSessions.js`.
-- Question set CRUD form and list remain static shells with inline `TODO (Backend Team)` annotations.
-- Sessions view outlines live controls and utility actions awaiting API hooks.
-- Player join screen delivers access code form plus buzzer button ready for WebSocket wiring.
-- Auth views call `/api/v1/auth/*` endpoints (signin/signup/signout/validate) to manage JWT cookie state via `AuthProvider`.
-- Home landing + game board share a slide-out drawer; global header hides on `/` for hero focus.
-- `/game-board` is now fully data-driven: it fetches random rounds via `/api/v1/question`, hydrates the eight-slot grid, submits guesses to `/api/v1/ai/:questionId`, and uses `useGameBoardEngine` for timers/buzz/strike logic. Placeholder avatars/team labels remain until lobby wiring lands.
-- Placeholder routes are available:
-  - `/under-construction` for unfinished flows and buttons
-  - `/signed-out` confirmation after sign‑out
-  - `*` → 404 Not Found page
+- **Game Engine Complete:** Real-time multiplayer via Colyseus with official Family Feud rules
+- **Game Lobby:** Create/join rooms with 6-digit codes, team selection, player ready states
+- **Player View:** Buzzer system, answer input, play/pass decisions, steal attempts
+- **Auto-Advance:** Rounds progress automatically after 5 seconds (no manual host control needed)
+- **Auth:** JWT cookie-based authentication via `AuthProvider`
+- **Admin:** Question management and game controls in sidebar
+
+### Routes
+| Path | Description |
+|------|-------------|
+| `/lobby` | Game lobby - create or join a room |
+| `/player-view` | Main game interface for players |
+| `/game-board` | Host display view (optional) |
+| `/signin`, `/signup` | Authentication |
+| `/questions` | Admin question management |
+| `/leaderboard` | Score rankings |
 
 ### Dev Proxy
 - Vite dev server proxies API calls to the backend:
   - `/api/*` → http://localhost:3000 (development)
-  - `/auth/*` → http://localhost:3000 (development)
-  - Set `credentials: 'include'` when calling auth routes so the cookie is stored.
+  - WebSocket connects directly to `ws://localhost:3000`
+  - Set `credentials: 'include'` for auth routes
 
-## Next Steps
-1. Replace dashboard/session placeholder utilities with live REST endpoints when available.
-2. Fix auth edge cases (await password comparison, align cookie names) and add better error messaging in the client once backend patch lands.
-3. Layer in real-time communication (Socket.IO or native WebSocket) for buzzer + host controls.
-4. Apply design system styling and responsive refinements after functionality stabilizes (PPT assets establish current layout ratios).
-5. Replace the temporary landing drawer with a shared, auth‑aware global nav and surface role-based routes after sign-in.
-6. Replace placeholder routes (UnderConstruction/SignedOut) with final implementations as endpoints and flows land.
+## Game Features
+- **Face-off:** Buzzer system with server-side timestamp for fairness
+- **Play/Pass:** Winning team decides after face-off
+- **Strikes:** Automatic on wrong answers (3 strikes = steal opportunity)
+- **Steal:** One attempt for opposing team
+- **Point Multipliers:** 1x (rounds 1-2), 2x (round 3), 3x (round 4)
+- **Reconnection:** Players can reconnect within 2 minutes of disconnect
 
 ## Branch & PR Workflow
-- Use feature branches per change (e.g., `feature/front-end-skeleton`).
+- Use feature branches per change (e.g., `feature/game-engine`).
 - Push the branch and open a PR against `main`. Small follow‑up commits auto‑update the PR.
 
 ## Documentation
-- `docs/family-feud-research.md` – gameplay + UX research summary.
-- `docs/backend-handoff.md` – endpoint expectations and integration notes for backend teammates.
-- `docs/frontend-log.md` – build timeline, verification steps, next actions.
+- `CLAUDE.md` – Development guide for the codebase
+- `docs/family-feud-research.md` – Gameplay + UX research summary
+- `docs/backend-handoff.md` – API expectations and integration notes

@@ -19,8 +19,6 @@ export default function NotFound() {
 
         <div>
           <Link to="/" className="menu-card__cta">Go Home</Link>
-          <span> or </span>
-          <Link to="/dashboard" className="menu-card__cta">Open Dashboard</Link>
         </div>
       </div>
     </div>

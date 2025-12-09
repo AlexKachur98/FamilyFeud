@@ -2,25 +2,27 @@
 
 ### Project Overview
 
-Family Feud is a full-stack recreation of the survey-style game show built as a mono-repo: a React SPA hosts the entire producer/host interface while an Express + MongoDB API powers authentication, question storage, AI-based answer validation, and future session management. Two teams compete to guess the most popular survey answers, earn points, and advance through rounds until a winning team is declared. The project emphasizes responsive host tooling, low-latency gameplay, and clear integration touchpoints for extending the experience (sessions, lobby management, real-time sockets).
+Family Feud is a full-stack recreation of the survey-style game show built as a mono-repo. A React SPA provides the player/host interface while an Express + MongoDB API powers authentication, question storage, AI-based answer validation, and leaderboard tracking. **Real-time multiplayer is powered by Colyseus.io** for WebSocket-based game state synchronization. Two teams compete to guess the most popular survey answers, earn points, and advance through rounds until a winning team is declared.
 
 ### Key Features
 
-- **Monorepo architecture:** npm workspace linking `client/` (React + Vite) and `server/` (Express 5) for coordinated builds and shared tooling.
-- **Question service:** MongoDB Atlas-backed question collection with `GET /api/v1/question` randomizer supporting `minAnswers`, `maxAnswers`, and `round` buckets, plus `GET /:id` + `POST /` for manual curation.
-- **Gameplay engine:** React hook (`useGameBoardEngine`) orchestrates round intros, spacebar buzz, timers, strikes, steals, scoring, and scoreboard persistence for eight-card layouts.
-- **AI-assisted validation:** `/api/v1/ai/:questionId` proxies to Google Gemini 2.5 Flash Lite with Zod schema enforcement to leniently match misspelled answers while guarding responses.
-- **Authentication:** JWT-based sign-up/in/out flows with HttpOnly cookies, bcrypt-hashed passwords, and middleware for route protection.
-- **Host tooling:** Dashboard, question set scaffolding, session management shells, player join and leaderboard pages with shared layout + navigation metadata.
-- **Security & ops:** Express rate limiting, helmet/cors/compression, `.env` management, and documentation covering secrets hygiene and API expectations.
+- **Real-time multiplayer:** Colyseus.io WebSocket framework for instant game state sync across all players
+- **Official Family Feud rules:** Face-off buzzer system, play/pass decisions, automatic strikes, steal attempts, point multipliers (1x/2x/3x)
+- **Monorepo architecture:** npm workspace linking `client/` (React + Vite) and `server/` (Express 5 + Colyseus) for coordinated builds
+- **AI-assisted validation:** Google Gemini 2.5 Flash Lite with Zod schema enforcement for lenient answer matching (handles misspellings, synonyms)
+- **Question service:** MongoDB Atlas-backed question collection with randomizer supporting answer count filters
+- **Authentication:** JWT-based sign-up/in/out flows with HttpOnly cookies, bcrypt-hashed passwords
+- **Leaderboard:** Persistent score tracking across games
+- **Security & ops:** Rate limiting, helmet/cors/compression, environment variable management
 
 ### Tech Stack
 
-- Frontend: React 19 + Vite 7
-- Backend: Node.js 20 + Express 5 + MongoDB (Mongoose ODM)
-- Auth: JWT (cookie-based)
-- AI: Google Gemini 2.5 Flash Lite for answer normalization
-- Tooling: npm workspaces, nodemon, concurrently, Vite dev server
+- **Frontend:** React 19 + Vite 7
+- **Backend:** Node.js 20 + Express 5 + MongoDB (Mongoose ODM)
+- **Real-time:** Colyseus.io 0.16 (WebSocket game server)
+- **Auth:** JWT (HttpOnly cookie-based)
+- **AI:** Google Gemini 2.5 Flash Lite for fuzzy answer matching
+- **Tooling:** npm workspaces, nodemon, Vite dev server
 
 ### Running Locally
 
@@ -42,27 +44,39 @@ Family Feud is a full-stack recreation of the survey-style game show built as a 
 5. Front-end only: `npm run dev --prefix client`
 6. Open the app in a browser at `http://localhost:5173` (Vite) or `http://localhost:3000` (proxy target).
 
+### Game Flow
+
+1. **Lobby:** Host creates a game room (6-digit code), players join via code
+2. **Face-off:** Two players buzz in, higher-ranked answer wins control
+3. **Play/Pass:** Winning team chooses to play or pass to opponents
+4. **Play Phase:** Team answers until 3 strikes or all answers revealed
+5. **Steal:** Opposing team gets ONE chance to steal points
+6. **Round End:** Points awarded, auto-advances to next round (5 second delay)
+7. **Game Over:** After 4 rounds, winner declared
+
+Point multipliers: Rounds 1-2 = 1x, Round 3 = 2x, Round 4 = 3x
+
 ### Backend API Snapshot
 
 | Route | Method | Description |
 | --- | --- | --- |
-| `/api/v1/auth/signup` | POST | Registers a new host, returns JWT cookie + profile |
-| `/api/v1/auth/signin` | POST | Authenticates host credentials |
+| `/api/v1/auth/signup` | POST | Registers a new user, returns JWT cookie + profile |
+| `/api/v1/auth/signin` | POST | Authenticates user credentials |
 | `/api/v1/auth/signout` | GET | Clears auth cookie |
 | `/api/v1/user/:id` | GET/PUT/DELETE | Protected user profile management |
-| `/api/v1/question` | GET | Returns randomized question ID + metadata with optional `minAnswers`, `maxAnswers`, or `round` query params |
+| `/api/v1/question` | GET | Returns randomized question with optional `minAnswers`, `maxAnswers` filters |
 | `/api/v1/question/:id` | GET | Fetches a specific question/answers |
-| `/api/v1/ai/:questionId` | POST | Sends `{ userAnswer }` for AI validation; response includes `{ index, answer, points }` |
+| `/api/v1/rooms/find/:code` | GET | Finds Colyseus room by 6-digit code |
+| `/api/v1/leaderboard` | GET/POST | Leaderboard management |
 
-> **Note:** Additional CRUD endpoints for question sets/sessions remain TODO (see `docs/backend-handoff.md`).
+### Colyseus Game Server
 
-### Game Board Preview
+The game uses Colyseus.io for real-time multiplayer:
 
-- Route: `/game-board`
-- Round intro splash uses asset-specific overlays (`public/Round_One.png`, `Round_Two.png`, etc.).
-- Press **Space** to buzz in; the input unlocks only for the active player during their timer window.
-- Five-second answer timer, strikes, and steal flow all run client-side so latency is minimal.
-- Placeholder round data lives inline in `client/src/pages/GameBoard.jsx` until the question bank JSON/API is wired in.
+- **WebSocket endpoint:** `ws://localhost:3000` (dev) / `wss://your-server.com` (prod)
+- **Room type:** `family_feud`
+- **State sync:** Automatic synchronization of game phase, teams, answers, scores
+- **Reconnection:** Supports player reconnection within 2 minutes of disconnect
 
 ### Contributing
 
@@ -72,23 +86,16 @@ Family Feud is a full-stack recreation of the survey-style game show built as a 
 
 ### Notes
 
-- Question sets are customizable — add or edit JSON data files to change surveys.
-- Consider adding authentication and persistent storage for extended multiplayer sessions.
-
-### Current Sprint Snapshot (2025-11-12)
-- Shared hamburger/drawer nav extracted and reused across landing + `/game-board`.
-- Host game board now mirrors the TV layout: round intros, question zoom, face-off buzzing, timers, strikes, steals, scoring, and placeholder assets for cards/players.
-- Board logic enforces eight-slot symmetry (rows render 1/5, 2/6, 3/7, 4/8) and keeps empty cards in the bottom rows for visual balance.
-- Timers use client-side grace windows so spacebar buzzing and answer windows feel snappy offline; backend hooks will subscribe to the same events later.
-- README and build log refreshed with the latest front-end expectations; backend integration TODOs remain for real data feeds.
+- Question sets are customizable via the admin interface or direct database edits.
+- AI validation has a 5-second timeout with fallback to simple string matching.
 
 ### Security Notes
 - `.env` is intentionally ignored—rotate any credentials that were shared previously and avoid committing secrets.
 - Cookies are currently marked `Secure`; when testing over HTTP, consider toggling this flag.
-- Rate limiting is enabled on general routes (`server/middlewares/rateLimiter.js`); extend it for auth/buzzer endpoints before production launch.
+- Rate limiting is enabled on general routes (`server/middlewares/rateLimiter.js`); extend it for auth endpoints before production launch.
 
 ### Dev Proxy
-- Vite development server proxies `/api/*` and `/auth/*` to the Express backend on `http://localhost:3000` so sign‑in/sign‑up work locally with cookies.
+- Vite development server proxies `/api/*` to the Express backend on `http://localhost:3000` so sign‑in/sign‑up work locally with cookies.
 
 ### Placeholder Routes
 - `/under-construction` indicates incomplete flows/actions.

@@ -24,7 +24,7 @@ export default function Home() {
           <div className="landing-basic__actions">
             {isLoggedIn ? (
               <>
-                <Link to="/dashboard" className="landing-basic__cta landing-basic__cta--primary">
+                <Link to="/leaderboard" className="landing-basic__cta landing-basic__cta--primary">
                   Play
                 </Link>
                 <button onClick={async () => await signOut()} className="landing-basic__cta landing-basic__cta--secondary">

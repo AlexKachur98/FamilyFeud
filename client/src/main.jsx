@@ -12,6 +12,7 @@ import './styles/index.css';
 import AuthProvider from './components/auth/AuthProvider.jsx';
 import { AccountsProvider } from './context/accounts.context.jsx';
 import { QuestionsProvider } from './context/questions.context.jsx';
+import { GameProvider } from './context/game.context.jsx';
 
 import App from './App.jsx';
 
@@ -20,7 +21,9 @@ createRoot(document.getElementById('root')).render(
     <AuthProvider>
       <AccountsProvider>
         <QuestionsProvider>
-          <App />
+          <GameProvider>
+            <App />
+          </GameProvider>
         </QuestionsProvider>
       </AccountsProvider>
     </AuthProvider>

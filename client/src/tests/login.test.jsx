@@ -100,7 +100,7 @@ describe('Login', () => {
     // Wait until the provider's user is set and reflected by DisplayUser
     await waitFor(() => {
       expect(screen.getByTestId('email')).toHaveTextContent('student@test.com');
-      expect(mockNavigate).toHaveBeenCalledWith('/dashboard');
+      expect(mockNavigate).toHaveBeenCalledWith('/leaderboard');
     });
   });
 });
